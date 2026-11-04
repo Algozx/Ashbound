@@ -28,7 +28,7 @@ namespace Ashbound.Gameplay.Pickups
 
             if (nearby != null)
             {
-                nearby.SetNearbyInteractable(null);
+                nearby.ClearNearbyInteractable(this);
             }
 
             nearby = player;

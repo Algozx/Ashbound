@@ -139,7 +139,7 @@ namespace Ashbound.Gameplay.Meta
             }
             else if (unlock.Kind == UnlockKind.Flask)
             {
-                flask.AddCharges(amount);
+                flask.AddCapacity(amount);
             }
         }
 

@@ -81,6 +81,15 @@ namespace Ashbound.Gameplay.Player
             NearbyInteractableChanged?.Invoke(interactable);
         }
 
+        /// <summary>Forgets an interactable the player left, unless another one took its place.</summary>
+        public void ClearNearbyInteractable(Interactable interactable)
+        {
+            if (nearby == interactable)
+            {
+                SetNearbyInteractable(null);
+            }
+        }
+
         /// <summary>Stops or restarts reading the player's input, for menus.</summary>
         public void SetInputEnabled(bool inputEnabled)
         {

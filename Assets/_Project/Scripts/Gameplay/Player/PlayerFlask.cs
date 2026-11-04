@@ -12,16 +12,23 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private int healAmount = 40;
 
         private PlayerCombat player;
+        private int capacity;
 
         public int Charges { get; private set; }
 
         /// <summary>Raised with the charges left.</summary>
         public event Action<int> ChargesChanged;
 
-        public void AddCharges(int amount)
+        /// <summary>Makes the flask bigger, and fills the new charges.</summary>
+        public void AddCapacity(int amount)
         {
-            Charges += amount;
-            ChargesChanged?.Invoke(Charges);
+            capacity += amount;
+            SetCharges(Charges + amount);
+        }
+
+        public void Refill()
+        {
+            SetCharges(capacity);
         }
 
         private void Awake()
@@ -40,8 +47,14 @@ namespace Ashbound.Gameplay.Player
             if (Charges > 0 && hurt && useAction.action.WasPressedThisFrame())
             {
                 player.Heal(healAmount);
-                AddCharges(-1);
+                SetCharges(Charges - 1);
             }
+        }
+
+        private void SetCharges(int charges)
+        {
+            Charges = charges;
+            ChargesChanged?.Invoke(Charges);
         }
     }
 }
