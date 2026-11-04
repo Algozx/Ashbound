@@ -8,5 +8,7 @@
 - No balance literals in code. Values are read from data assets.
 - No allocations in per-frame paths. Cache components and pool spawned objects.
 - All run content uses `SeededRandom`, never `UnityEngine.Random` or `System.Random`.
+- Scenes, prefabs and UI are authored in the Editor as assets, never built from code. Scripts hold
+  behaviour and get their references through serialized fields.
 - UI is a uGUI prefab with a glue script. Shared UI behaviour goes in `UI/Core`.
 - Never name a namespace like a BCL type (Math, Random, Tasks).
