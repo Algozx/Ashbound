@@ -17,6 +17,7 @@ namespace Ashbound.Logic.Movement
         public float DashDuration;
         public float DashCooldown;
         public float DashInvulnerability;
+        public float AttackMoveScale;
 
         public float Gravity => 2f * JumpHeight / (TimeToApex * TimeToApex);
 

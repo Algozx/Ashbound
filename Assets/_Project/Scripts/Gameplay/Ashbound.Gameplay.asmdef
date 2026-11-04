@@ -1,7 +1,7 @@
 {
     "name": "Ashbound.Gameplay",
     "rootNamespace": "Ashbound.Gameplay",
-    "references": ["Ashbound.Logic", "Unity.InputSystem"],
+    "references": ["Ashbound.Logic", "Unity.InputSystem", "Unity.Cinemachine"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

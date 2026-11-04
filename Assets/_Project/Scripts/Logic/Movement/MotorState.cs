@@ -8,5 +8,6 @@ namespace Ashbound.Logic.Movement
         Jump,
         Fall,
         Dash,
+        Hurt,
     }
 }
