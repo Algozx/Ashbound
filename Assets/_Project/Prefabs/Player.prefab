@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29901c98001c7f946989651174113da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerCombat
-  attack: {fileID: 11400000, guid: b4294ee1bd1be6047bc7a3e4ee455ee4, type: 2}
+  weapon: {fileID: 11400000, guid: 731712e14c7bb864c84ed82cf11237e2, type: 2}
   attackAction: {fileID: -8360104705758736140, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   hitbox: {fileID: 441990901335554244}
   feedback: {fileID: 2471775014140377627}

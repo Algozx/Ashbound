@@ -61,6 +61,19 @@ rooms joined by seed with death and restart.
 **Alternatives considered:** Level generation first.
 **Why:** How the combat feels is the largest risk to the game, so it is tested first.
 
+## 2026-11-04: Weapons define how combat handles
+**Decision:** A weapon is a data asset with a combo of steps, how fast the player moves while
+swinging and whether jumping is allowed. Each step plays a part of the shared attack clip at its own
+speed. A swing keeps its side, and the next step can turn around.
+**Why:** After playing M0.2, stopping to attack felt stiff. Light weapons now let the player walk and
+jump while attacking, and heavy ones commit the player. The sword walks at 80% speed.
+**Consequences:** The body keeps the attack pose while walking, because the art has no separate legs.
+
+## 2026-11-04: Regular enemies match the player's size
+**Decision:** Regular enemies are about as tall as the player, around 2 units. Only bosses are larger.
+**Consequences:** The skeleton imports at 24 pixels per unit, so its pixels are slightly smaller than
+the player's.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

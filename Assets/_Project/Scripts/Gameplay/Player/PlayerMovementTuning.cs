@@ -27,9 +27,6 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private float dashCooldown = 0.55f;
         [SerializeField] private float dashInvulnerability = 0.22f;
 
-        [Header("Attack")]
-        [SerializeField, Range(0f, 1f)] private float attackMoveScale = 0.15f;
-
         public PlayerMotorSettings ToSettings()
         {
             return new PlayerMotorSettings
@@ -48,7 +45,6 @@ namespace Ashbound.Gameplay.Player
                 DashDuration = dashDuration,
                 DashCooldown = dashCooldown,
                 DashInvulnerability = dashInvulnerability,
-                AttackMoveScale = attackMoveScale,
             };
         }
     }

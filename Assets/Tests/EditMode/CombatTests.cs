@@ -8,6 +8,7 @@ namespace Ashbound.Tests
     public class CombatTests
     {
         private const float Step = 0.02f;
+        private static readonly float[] Durations = { 0.25f, 0.25f };
 
         private static EnemyBrainSettings BrainSettings()
         {
@@ -59,51 +60,89 @@ namespace Ashbound.Tests
         [Test]
         public void AttackStartsOnPressAndEndsAfterItsDuration()
         {
-            var timer = new AttackTimer(0.1f);
-            timer.Press();
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
 
-            Assert.IsTrue(timer.Tick(Step, 0.5f, true));
-            Assert.IsTrue(timer.IsActive);
+            Assert.AreEqual(0, combo.Tick(Step, Durations, true));
+            Assert.IsTrue(combo.IsActive);
 
-            timer.Tick(0.6f, 0.5f, true);
+            combo.Tick(0.3f, Durations, true);
 
-            Assert.IsFalse(timer.IsActive);
+            Assert.IsFalse(combo.IsActive);
         }
 
         [Test]
-        public void PressNearTheEndChainsTheNextAttack()
+        public void PressNearTheEndChainsTheNextStep()
         {
-            var timer = new AttackTimer(0.1f);
-            timer.Press();
-            timer.Tick(Step, 0.5f, true);
-            timer.Tick(0.45f, 0.5f, true);
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
+            combo.Tick(Step, Durations, true);
+            combo.Tick(0.2f, Durations, true);
 
-            timer.Press();
+            combo.Press();
 
-            Assert.IsTrue(timer.Tick(0.06f, 0.5f, true));
+            Assert.AreEqual(1, combo.Tick(0.06f, Durations, true));
+        }
+
+        [Test]
+        public void ComboResetsWhenTheWindowCloses()
+        {
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
+            combo.Tick(Step, Durations, true);
+            combo.Tick(0.3f, Durations, true);
+            combo.Tick(0.4f, Durations, true);
+
+            combo.Press();
+
+            Assert.AreEqual(0, combo.Tick(Step, Durations, true));
+        }
+
+        [Test]
+        public void ComboWrapsAfterTheLastStep()
+        {
+            var combo = new AttackCombo(0.1f, 0.3f);
+            for (int expected = 0; expected < 3; expected++)
+            {
+                combo.Press();
+                Assert.AreEqual(expected % 2, combo.Tick(0.3f, Durations, true));
+            }
         }
 
         [Test]
         public void EarlyPressIsForgotten()
         {
-            var timer = new AttackTimer(0.1f);
-            timer.Press();
-            timer.Tick(Step, 1f, true);
-            timer.Press();
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
+            combo.Tick(Step, new[] { 1f }, true);
+            combo.Press();
 
-            timer.Tick(0.2f, 1f, true);
-            timer.Tick(0.9f, 1f, true);
+            combo.Tick(0.2f, new[] { 1f }, true);
+            combo.Tick(0.9f, new[] { 1f }, true);
 
-            Assert.IsFalse(timer.IsActive);
+            Assert.IsFalse(combo.IsActive);
         }
 
         [Test]
         public void AttackDoesNotStartWhenNotAllowed()
         {
-            var timer = new AttackTimer(0.1f);
-            timer.Press();
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
 
-            Assert.IsFalse(timer.Tick(Step, 0.5f, false));
+            Assert.AreEqual(AttackCombo.NoStep, combo.Tick(Step, Durations, false));
+        }
+
+        [Test]
+        public void CancelRestartsTheCombo()
+        {
+            var combo = new AttackCombo(0.1f, 0.3f);
+            combo.Press();
+            combo.Tick(Step, Durations, true);
+
+            combo.Cancel();
+            combo.Press();
+
+            Assert.AreEqual(0, combo.Tick(Step, Durations, true));
         }
 
         [Test]
@@ -221,14 +260,65 @@ namespace Ashbound.Tests
             Assert.IsTrue(motor.IsInvulnerable);
         }
 
-        [Test]
-        public void AttackingOnTheGroundSlowsThePlayer()
+        private static PlayerMotor ArmedMotor()
         {
-            var motor = new PlayerMotor(new PlayerMotorSettings { RunSpeed = 10f, GroundAcceleration = 1000f, AttackMoveScale = 0.2f, TimeToApex = 1f, JumpHeight = 1f });
+            return new PlayerMotor(new PlayerMotorSettings { RunSpeed = 10f, GroundAcceleration = 1000f, TimeToApex = 1f, JumpHeight = 1f, JumpBufferTime = 0.1f, CoyoteTime = 0.1f, FallGravityMultiplier = 1f, MaxFallSpeed = 20f });
+        }
 
-            motor.Step(new MotorInput { MoveX = 1f, Attacking = true, Grounded = true, DeltaTime = Step });
+        [Test]
+        public void WeaponDecidesHowFastThePlayerWalksWhileAttacking()
+        {
+            PlayerMotor light = ArmedMotor();
+            PlayerMotor heavy = ArmedMotor();
 
-            Assert.AreEqual(2f, motor.VelocityX, 0.001f);
+            light.Step(new MotorInput { MoveX = 1f, Attacking = true, AttackMoveScale = 0.8f, Grounded = true, DeltaTime = Step });
+            heavy.Step(new MotorInput { MoveX = 1f, Attacking = true, AttackMoveScale = 0.2f, Grounded = true, DeltaTime = Step });
+
+            Assert.AreEqual(8f, light.VelocityX, 0.001f);
+            Assert.AreEqual(2f, heavy.VelocityX, 0.001f);
+        }
+
+        [Test]
+        public void LightWeaponAllowsJumpingDuringAnAttack()
+        {
+            PlayerMotor motor = ArmedMotor();
+
+            motor.Step(new MotorInput { JumpPressed = true, JumpHeld = true, Attacking = true, AttackMoveScale = 0.8f, Grounded = true, DeltaTime = Step });
+
+            Assert.Greater(motor.VelocityY, 0f);
+        }
+
+        [Test]
+        public void HeavyWeaponBlocksJumpingDuringAnAttack()
+        {
+            PlayerMotor motor = ArmedMotor();
+
+            motor.Step(new MotorInput { JumpPressed = true, JumpHeld = true, Attacking = true, AttackBlocksJump = true, Grounded = true, DeltaTime = Step });
+
+            Assert.AreEqual(0f, motor.VelocityY, 0.001f);
+        }
+
+        [Test]
+        public void SwingKeepsItsSide()
+        {
+            PlayerMotor motor = ArmedMotor();
+
+            motor.Step(new MotorInput { MoveX = -1f, Attacking = true, AttackMoveScale = 1f, Grounded = true, DeltaTime = Step });
+
+            Assert.AreEqual(1, motor.Facing);
+        }
+
+        [Test]
+        public void LungePushesForwardWithoutSlowingARun()
+        {
+            PlayerMotor motor = ArmedMotor();
+            motor.Lunge(3f);
+            Assert.AreEqual(3f, motor.VelocityX, 0.001f);
+
+            motor.Step(new MotorInput { MoveX = 1f, Grounded = true, DeltaTime = Step });
+            motor.Lunge(3f);
+
+            Assert.AreEqual(10f, motor.VelocityX, 0.001f);
         }
     }
 }

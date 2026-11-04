@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 
 namespace Ashbound.Gameplay.Player
 {
-    /// <summary>The player's attack and health.</summary>
+    /// <summary>The player's weapon and health.</summary>
     [RequireComponent(typeof(PlayerController))]
     public sealed class PlayerCombat : MonoBehaviour, IDamageable
     {
-        [SerializeField] private AttackDefinition attack;
+        [SerializeField] private WeaponDefinition weapon;
         [SerializeField] private InputActionReference attackAction;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private CombatFeedback feedback;
@@ -26,11 +26,13 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private float restartDelay = 1.6f;
 
         [Header("Input")]
-        [SerializeField] private float attackBufferTime = 0.15f;
+        [SerializeField] private float attackBufferTime = 0.2f;
 
         private PlayerController controller;
-        private AttackTimer attackTimer;
+        private AttackCombo combo;
         private Health health;
+        private float[] stepDurations;
+        private AttackStep currentStep;
 
         public int CurrentHealth => health.Current;
 
@@ -59,8 +61,9 @@ namespace Ashbound.Gameplay.Player
         private void Awake()
         {
             controller = GetComponent<PlayerController>();
-            attackTimer = new AttackTimer(attackBufferTime);
+            combo = new AttackCombo(attackBufferTime, weapon.ComboWindow);
             health = new Health(maxHealth);
+            stepDurations = weapon.StepDurations();
         }
 
         private void OnEnable()
@@ -78,44 +81,49 @@ namespace Ashbound.Gameplay.Player
         {
             if (attackAction.action.WasPressedThisFrame())
             {
-                attackTimer.Press();
+                combo.Press();
             }
 
-            if (controller.IsDashing && attackTimer.IsActive)
+            if (controller.IsDashing && combo.IsActive)
             {
                 EndAttack();
             }
 
             bool canStart = !health.IsDead && !controller.IsDashing && !controller.IsStunned;
-            if (attackTimer.Tick(Time.deltaTime, attack.Duration, canStart))
+            int step = combo.Tick(Time.deltaTime, stepDurations, canStart);
+            if (step != AttackCombo.NoStep)
             {
-                StartAttack();
+                StartStep(weapon.Steps[step]);
             }
 
-            controller.Attacking = attackTimer.IsActive;
-            if (!attackTimer.IsActive)
+            controller.SetAttacking(combo.IsActive, weapon.MoveScale, weapon.BlocksJump);
+            if (!combo.IsActive)
             {
                 hitbox.Close();
             }
         }
 
-        private void StartAttack()
+        private void StartStep(AttackStep step)
         {
-            hitbox.Configure(new HitInfo { Damage = attack.Damage, Knockback = attack.Knockback }, controller.Facing);
-            controller.RestartAttackAnimation();
+            currentStep = step;
+            hitbox.Close();
+            controller.FaceInputDirection();
+            hitbox.Configure(new HitInfo { Damage = step.Damage, Knockback = step.Knockback }, controller.Facing);
+            controller.PlayAttack(step.ClipStart / weapon.ClipLength, (step.ClipEnd - step.ClipStart) / step.Duration);
+            controller.Lunge(step.Lunge);
             feedback.PlaySwing();
         }
 
         private void EndAttack()
         {
-            attackTimer.Cancel();
+            combo.Cancel();
             hitbox.Close();
-            controller.Attacking = false;
+            controller.SetAttacking(false, 1f, false);
         }
 
         private void OnHitLanded()
         {
-            feedback.PlayHit(attack.HitStop, attack.ShakeForce);
+            feedback.PlayHit(currentStep.HitStop, currentStep.ShakeForce);
         }
 
         private IEnumerator RestartAfterDeath()
