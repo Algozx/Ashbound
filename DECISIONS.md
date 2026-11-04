@@ -30,6 +30,37 @@ bootstrap and scene flow. `Ashbound.Editor` holds build and import tools. `Ashbo
 **Decision:** All run content uses `SeededRandom` (SplitMix64) with one forked stream per subsystem.
 **Why:** A seed must reproduce a run on every platform, and loot rolls must not shift the level layout.
 
+## 2026-11-04: Art storage
+**Decision:** `Assets/_Project/Art` is a submodule pointing to a private repository. Asset Store art
+is never committed to this public repository.
+**Alternatives considered:** Ignoring the folder with no backup, or replacing all paid-store art.
+**Why:** Asset Store licenses do not allow redistribution, and the art still needs version control.
+**Consequences:** A clone of the public repository compiles but has no art. Published WebGL builds
+contain the art as part of the game, which the licenses allow.
+
+## 2026-11-04: Game defaults
+**Decision:** The target is a complete slice: one biome, one boss, runs of 15 to 20 minutes. Weapons
+differ by damage, reach, speed and effects while reusing the sword animations. Movement is run, jump,
+a dash with invulnerability and a dash attack. Levels join hand-made rooms by seed. Death ends the
+run but keeps a currency for permanent unlocks. The setting is a knight bound to a castle in ashes.
+The signature mechanic is chosen at the end of M0. Desktop browsers, keyboard and gamepad, English.
+**Why:** The player art has a single weapon set, and this scope fits one developer.
+**Consequences:** Wall slide and edge grab are deferred, although the art supports them.
+
+## 2026-11-04: Architecture defaults
+**Decision:** The player is a kinematic Rigidbody2D driven by a state machine. Hitboxes are enabled
+by Animation Events. Enemies are prefab variants of one base with patrol, telegraph, attack and
+recover states. Rooms are prefabs with a Tilemap and door anchors. Weapons, enemies, rooms and tuning
+are ScriptableObjects. Spawned objects are pooled. The WebGL build stays under 50 MB.
+**Why:** Kinematic movement gives exact control over feel, and frame-accurate hitboxes come from the
+animation itself.
+
+## 2026-11-04: M0 order
+**Decision:** Build combat before level generation: M0.1 movement, M0.2 melee and one enemy, M0.3
+rooms joined by seed with death and restart.
+**Alternatives considered:** Level generation first.
+**Why:** How the combat feels is the largest risk to the game, so it is tested first.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

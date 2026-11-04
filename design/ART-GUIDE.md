@@ -35,5 +35,5 @@ Melee attacks need their own frames. A character that only shoots does not cover
 
 ## Licenses
 Every asset needs an author, a source link and a license in the README credits table before it is
-committed. The repository is public, so Asset Store art cannot be committed without the publisher's
-permission. Keep such files out of Git, or use CC0 or your own art.
+committed. `Assets/_Project/Art` is a submodule in a private repository, so commit art there. Only
+CC0 or original files may go in the public repository, such as `Audio` and `Fonts`.
