@@ -2,7 +2,7 @@
 
 Read `CHARTER.md` first. Updated at the end of every work session.
 
-Resume here (2026-11-04): M1.4 is built and waiting for a hands-on check. Next is M1.5, Heat, the signature mechanic.
+Resume here (2026-11-04): M1.4, the hub and the rest rooms are built and waiting for a hands-on check. Next is M1.5, Heat, the signature mechanic.
 
 ## Current milestone: M1, challenge and the first biome
 Goal: each run demands attention and offers choices, with a clear objective at the end.

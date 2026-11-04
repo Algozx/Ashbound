@@ -76,6 +76,14 @@ namespace Ashbound.Gameplay.Player
             motor.Hurt(knockbackX, knockbackY, stunTime, invulnerability);
         }
 
+        /// <summary>Moves the player to a spot at once, as a portal does.</summary>
+        public void Teleport(Vector2 position)
+        {
+            transform.position = position;
+            GetComponent<Rigidbody2D>().position = position;
+            UnityEngine.Physics2D.SyncTransforms();
+        }
+
         /// <summary>Stops all control and plays the death animation.</summary>
         public void Die()
         {

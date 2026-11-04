@@ -149,7 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620f32a239e145a4aac6c67a76eac3e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Levels.RunDirector
-  startRoom: {fileID: 2370994099976602782, guid: 123261ccef54947438d183a2b2ef49dc, type: 3}
+  hubRoom: {fileID: 2370994099976602782, guid: 123261ccef54947438d183a2b2ef49dc, type: 3}
+  restRoom: {fileID: 2370994099976602782, guid: fc831eadc2e9d6d458daca7475673c02, type: 3}
   exitRoom: {fileID: 4476307018893591153, guid: 56755a37f1de3584b80dfa6b4bb18770, type: 3}
   roomPool:
   - {fileID: 9222752670669948641, guid: 025127d32176b4548bcf57223dd15ec6, type: 3}
@@ -163,7 +164,10 @@ MonoBehaviour:
   - {fileID: 8207147374973633234, guid: 1259d59b0a16e4040913e4b41ba32fb4, type: 3}
   player: {fileID: 1109068951}
   progression: {fileID: 96572422}
-  roomsPerRun: 3
+  portalPrefab: {fileID: 338732425725357725, guid: 3ba09937d2a7e0d4db552304ea6c2225, type: 3}
+  followCamera: {fileID: 222642636}
+  mapsPerRun: 2
+  roomsPerMap: 2
   loot:
   - prefab: {fileID: 4140624688520277673, guid: 1972570df33986a40abcc3647b3602c7, type: 3}
     weight: 3

@@ -164,6 +164,20 @@ the Embers each enemy drops. Taking damage puts it out. It is built as its own s
 **Alternatives considered:** A burning dash, which needs new effects and more balancing.
 **Why:** It rewards skill, links combat to the currency, and needs no new art.
 
+## 2026-11-04: Hub, maps and rest rooms
+**Decision:** The game starts in a hub with an altar and a portal, where NPCs can go later. A run is two
+maps of two rooms each, a rest room after each map, then the boss. Portals, used with Interact, join
+these parts. A rest room has a fire that restores health and the flask once, an altar and the next
+portal. Altars no longer stand at the end of rooms. Death and the exit return to the hub. The hub and
+rest rooms are room prefabs in the Game scene, built with the run.
+**Alternatives considered:** A separate hub scene, which would duplicate the player and HUD setup before
+there is anything to justify it. A rest room after every single room, which would remove most of the
+pressure of a run.
+**Why:** The user asked for a home base and for a real pause between maps instead of a totem at the end
+of every room. This supersedes the altar placement in the Embers entry.
+**Consequences:** Runs now have four rooms instead of three, so the last room is harder than before and
+Embers per run go up. `mapsPerRun` and `roomsPerMap` are on the run director.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

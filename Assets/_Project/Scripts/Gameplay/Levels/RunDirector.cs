@@ -5,26 +5,37 @@ using Ashbound.Gameplay.Meta;
 using Ashbound.Gameplay.Player;
 using Ashbound.Logic;
 using Ashbound.Logic.Levels;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Ashbound.Gameplay.Levels
 {
-    /// <summary>Builds a run from a seed and restarts it on death or at the exit.</summary>
+    /// <summary>
+    /// Builds a run from a seed: the hub, then maps of rooms with a rest room after each one, then the
+    /// boss. Portals join the parts, and the run goes back to the hub on death or at the exit.
+    /// </summary>
     public sealed class RunDirector : MonoBehaviour
     {
         private const ulong RoomStream = 1;
         private const ulong SpawnStream = 2;
         private const ulong LootStream = 3;
         private const float RoomMargin = 2.5f;
+        private const float PortalFromExit = 3f;
 
-        [SerializeField] private Room startRoom;
+        private static readonly Vector3 ArrivalOffset = new Vector3(3f, 0.02f, 0f);
+
+        [SerializeField] private Room hubRoom;
+        [SerializeField] private Room restRoom;
         [SerializeField] private Room exitRoom;
         [SerializeField] private Room[] roomPool;
         [SerializeField] private EnemyController[] enemyPool;
         [SerializeField] private PlayerCombat player;
         [SerializeField] private Progression progression;
-        [SerializeField] private int roomsPerRun = 3;
+        [SerializeField] private Portal portalPrefab;
+        [SerializeField] private CinemachineCamera followCamera;
+        [SerializeField] private int mapsPerRun = 2;
+        [SerializeField] private int roomsPerMap = 2;
         [SerializeField] private LootEntry[] loot;
         [Header("Difficulty")]
         [Tooltip("Extra enemy health and damage per room, as a share of the base value.")]
@@ -72,21 +83,36 @@ namespace Ashbound.Gameplay.Levels
             SeededRandom spawnRandom = random.Fork(SpawnStream);
             SeededRandom lootRandom = random.Fork(LootStream);
 
-            Room previous = Instantiate(startRoom, transform);
+            Room previous = Instantiate(hubRoom, transform);
             previous.PlaceEntryAt(Vector3.zero);
-            BindAltars(previous);
+            BindRoom(previous);
             player.transform.position = previous.PlayerStart.position;
+            Portal pending = previous.GetComponentInChildren<Portal>();
 
             var difficulty = new DifficultyCurve(statStepPerRoom, baseSpawnChance, spawnChanceStep);
-            int[] chain = RoomChain.Build(roomRandom, roomPool.Length, roomsPerRun);
+            int[] chain = RoomChain.Build(roomRandom, roomPool.Length, mapsPerRun * roomsPerMap);
             for (int depth = 0; depth < chain.Length; depth++)
             {
                 previous = PlaceAfter(roomPool[chain[depth]], previous);
                 SpawnEnemies(previous, spawnRandom, difficulty, depth);
                 SpawnLoot(previous, lootRandom);
+
+                if (depth % roomsPerMap == 0)
+                {
+                    pending.SetDestination(previous.Entry.position + ArrivalOffset);
+                }
+
+                if ((depth + 1) % roomsPerMap == 0)
+                {
+                    Portal mapExit = PlacePortal(previous);
+                    previous = PlaceAfter(restRoom, previous);
+                    mapExit.SetDestination(previous.PlayerStart.position);
+                    pending = previous.GetComponentInChildren<Portal>();
+                }
             }
 
             Room last = PlaceAfter(exitRoom, previous);
+            pending.SetDestination(last.Entry.position + ArrivalOffset);
             last.GetComponentInChildren<ExitGate>(true).Reached += OnExitReached;
             Arena = last.GetComponent<BossArena>();
             Arena.Prepare(player.transform);
@@ -101,16 +127,35 @@ namespace Ashbound.Gameplay.Levels
         {
             Room room = Instantiate(prefab, transform);
             room.PlaceEntryAt(previous.Exit.position);
-            BindAltars(room);
+            BindRoom(room);
             return room;
         }
 
-        private void BindAltars(Room room)
+        private Portal PlacePortal(Room room)
+        {
+            Vector3 position = room.Exit.position + Vector3.left * PortalFromExit;
+            Portal portal = Instantiate(portalPrefab, position, Quaternion.identity, room.transform);
+            portal.Used += OnPortalUsed;
+            return portal;
+        }
+
+        private void BindRoom(Room room)
         {
             foreach (Altar altar in room.GetComponentsInChildren<Altar>())
             {
                 altar.Bind(progression);
             }
+
+            foreach (Portal portal in room.GetComponentsInChildren<Portal>())
+            {
+                portal.Used += OnPortalUsed;
+            }
+        }
+
+        // Without this the camera would slide across the level after a portal.
+        private void OnPortalUsed(Vector2 moved)
+        {
+            followCamera.OnTargetObjectWarped(player.transform, moved);
         }
 
         private void SpawnEnemies(Room room, SeededRandom random, DifficultyCurve difficulty, int depth)

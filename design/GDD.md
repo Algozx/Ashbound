@@ -13,7 +13,7 @@ hand-made rooms, where death restarts the run and permanent unlocks carry over.
 
 ## 3. Loops
 - Core (seconds): move, dodge, attack, get feedback, collect.
-- Run (minutes): enter a biome, fight through rooms, pick up gear, face the boss or die.
+- Run (minutes): leave the hub, fight through maps of rooms, rest between maps, face the boss or die.
 - Meta (across runs): spend what survived the run on permanent unlocks.
 
 ## 4. Target
