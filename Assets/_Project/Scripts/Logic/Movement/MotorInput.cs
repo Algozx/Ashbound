@@ -8,6 +8,8 @@ namespace Ashbound.Logic.Movement
         public bool JumpHeld;
         public bool DashPressed;
         public bool Attacking;
+        public float AttackMoveScale;
+        public bool AttackBlocksJump;
         public bool Grounded;
         public bool HitCeiling;
         public float DeltaTime;

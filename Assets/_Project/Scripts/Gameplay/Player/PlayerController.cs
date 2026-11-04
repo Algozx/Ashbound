@@ -36,6 +36,9 @@ namespace Ashbound.Gameplay.Player
         private bool jumpQueued;
         private bool dashQueued;
         private bool dead;
+        private bool attacking;
+        private bool attackBlocksJump;
+        private float attackMoveScale = 1f;
 
         public bool IsInvulnerable => motor.IsInvulnerable;
 
@@ -45,8 +48,25 @@ namespace Ashbound.Gameplay.Player
 
         public int Facing => motor.Facing;
 
-        /// <summary>Set by the combat component while an attack is playing.</summary>
-        public bool Attacking { get; set; }
+        /// <summary>Tells the motor how the current weapon limits movement while it swings.</summary>
+        public void SetAttacking(bool attacking, float moveScale, bool blocksJump)
+        {
+            this.attacking = attacking;
+            attackMoveScale = moveScale;
+            attackBlocksJump = blocksJump;
+        }
+
+        /// <summary>Turns toward the held direction, so the next hit of a combo can change side.</summary>
+        public void FaceInputDirection()
+        {
+            motor.Face(moveAction.action.ReadValue<Vector2>().x);
+        }
+
+        /// <summary>Pushes the player forward at the start of an attack.</summary>
+        public void Lunge(float speed)
+        {
+            motor.Lunge(speed);
+        }
 
         /// <summary>Applies the movement side of a hit.</summary>
         public void Hurt(float knockbackX, float knockbackY, float stunTime, float invulnerability)
@@ -60,11 +80,12 @@ namespace Ashbound.Gameplay.Player
             dead = true;
         }
 
-        /// <summary>Restarts the attack animation for a chained attack.</summary>
-        public void RestartAttackAnimation()
+        /// <summary>Plays the attack clip from a point in it, at the speed the step needs.</summary>
+        public void PlayAttack(float normalizedStart, float speed)
         {
             shownState = AttackState;
-            animator.Play(AttackState, 0, 0f);
+            animator.speed = speed;
+            animator.Play(AttackState, 0, normalizedStart);
         }
 
         private void Awake()
@@ -98,7 +119,9 @@ namespace Ashbound.Gameplay.Player
                 JumpPressed = jumpQueued && !dead,
                 JumpHeld = jumpAction.action.IsPressed() && !dead,
                 DashPressed = dashQueued && !dead,
-                Attacking = Attacking,
+                Attacking = attacking,
+                AttackMoveScale = attackMoveScale,
+                AttackBlocksJump = attackBlocksJump,
                 Grounded = mover.Grounded,
                 HitCeiling = mover.HitCeiling,
                 DeltaTime = Time.fixedDeltaTime,
@@ -122,6 +145,7 @@ namespace Ashbound.Gameplay.Player
             if (wanted != shownState)
             {
                 shownState = wanted;
+                animator.speed = 1f;
                 animator.Play(wanted, 0, 0f);
             }
         }
@@ -143,7 +167,7 @@ namespace Ashbound.Gameplay.Player
                 return DashState;
             }
 
-            if (Attacking)
+            if (attacking)
             {
                 return AttackState;
             }

@@ -21,7 +21,7 @@ MonoBehaviour:
   knockbackDecay: 30
   aggroRange: 9
   aggroHeight: 3
-  attackRange: 2
+  attackRange: 1.6
   telegraphTime: 0.5
   strikeTime: 0.17
   recoverTime: 0.7

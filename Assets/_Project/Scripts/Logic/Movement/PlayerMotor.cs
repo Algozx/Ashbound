@@ -35,6 +35,25 @@ namespace Ashbound.Logic.Movement
 
         public bool IsDashing => dashTimer > 0f;
 
+        /// <summary>Turns toward a horizontal direction. A value near zero keeps the current side.</summary>
+        public void Face(float directionX)
+        {
+            if (directionX > 0.01f)
+            {
+                Facing = 1;
+            }
+            else if (directionX < -0.01f)
+            {
+                Facing = -1;
+            }
+        }
+
+        /// <summary>Pushes the player forward, never slowing a faster movement.</summary>
+        public void Lunge(float speed)
+        {
+            VelocityX = Facing > 0 ? Math.Max(VelocityX, speed) : Math.Min(VelocityX, -speed);
+        }
+
         /// <summary>Stops control for a moment and pushes the player away from a hit.</summary>
         public void Hurt(float knockbackX, float knockbackY, float stunTime, float invulnerability)
         {
@@ -53,13 +72,10 @@ namespace Ashbound.Logic.Movement
             float dt = input.DeltaTime;
             TickTimers(input, dt);
 
-            if (input.MoveX > 0.01f)
+            // A swing keeps its side, so the hit lands where the animation points.
+            if (!input.Attacking || input.DashPressed)
             {
-                Facing = 1;
-            }
-            else if (input.MoveX < -0.01f)
-            {
-                Facing = -1;
+                Face(input.MoveX);
             }
 
             if (input.Grounded && VelocityY <= 0f)
@@ -129,7 +145,7 @@ namespace Ashbound.Logic.Movement
             float target = Math.Clamp(input.MoveX, -1f, 1f) * settings.RunSpeed;
             if (input.Attacking && input.Grounded)
             {
-                target *= settings.AttackMoveScale;
+                target *= input.AttackMoveScale;
             }
 
             float acceleration = input.Grounded ? settings.GroundAcceleration : settings.AirAcceleration;
@@ -140,7 +156,8 @@ namespace Ashbound.Logic.Movement
 
         private void ApplyJump(in MotorInput input)
         {
-            if (jumpBufferTimer > 0f && coyoteTimer > 0f && !input.Attacking)
+            bool jumpBlocked = input.Attacking && input.AttackBlocksJump;
+            if (jumpBufferTimer > 0f && coyoteTimer > 0f && !jumpBlocked)
             {
                 VelocityY = settings.JumpVelocity;
                 jumpBufferTimer = 0f;

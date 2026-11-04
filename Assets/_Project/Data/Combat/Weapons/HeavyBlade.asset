@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1318b1df437f40b4484a6213d98eb05c, type: 3}
+  m_Name: HeavyBlade
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.WeaponDefinition
+  attackClip: {fileID: 7400000, guid: d580f1d1a428cb040b4d98afe8ba4e60, type: 2}
+  moveScale: 0.25
+  blocksJump: 1
+  comboWindow: 0.45
+  steps:
+  - clipStart: 0.3
+    clipEnd: 0.75
+    duration: 0.45
+    damage: 20
+    knockback: 8
+    lunge: 1
+    hitStop: 0.07
+    shakeForce: 0.4
+  - clipStart: 0.75
+    clipEnd: 1.2
+    duration: 0.5
+    damage: 28
+    knockback: 12
+    lunge: 2
+    hitStop: 0.1
+    shakeForce: 0.6
