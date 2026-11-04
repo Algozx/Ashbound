@@ -16,6 +16,8 @@ namespace Ashbound.Gameplay.Physics
 
         [SerializeField] private LayerMask solidLayers;
         [SerializeField] private LayerMask oneWayLayers;
+        [Tooltip("Platform middles: bodies land on them and drop through them, but cannot rise through them.")]
+        [SerializeField] private LayerMask platformCoreLayers;
 
         private readonly RaycastHit2D[] hits = new RaycastHit2D[MaxHits];
         private Rigidbody2D body;
@@ -32,7 +34,10 @@ namespace Ashbound.Gameplay.Physics
         public bool OnOneWayPlatform { get; private set; }
 
         /// <summary>Everything a body can stand on.</summary>
-        public LayerMask GroundLayers => solidLayers | oneWayLayers;
+        public LayerMask GroundLayers => solidLayers | oneWayLayers | platformCoreLayers;
+
+        /// <summary>Platform parts that stop this body from rising.</summary>
+        public LayerMask PlatformCoreLayers => platformCoreLayers;
 
         /// <summary>Lets the body fall through one-way platforms for a moment.</summary>
         public void DropThrough(float seconds)
@@ -44,7 +49,7 @@ namespace Ashbound.Gameplay.Physics
         {
             body = GetComponent<Rigidbody2D>();
             bodyCollider = GetComponent<Collider2D>();
-            filter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = solidLayers | oneWayLayers };
+            filter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = GroundLayers };
         }
 
         /// <summary>Refreshes <see cref="Grounded"/>. Call it before reading the state of this step.</summary>
@@ -101,8 +106,11 @@ namespace Ashbound.Gameplay.Physics
             for (int i = 0; i < count; i++)
             {
                 RaycastHit2D hit = hits[i];
-                bool hitOneWay = (oneWayLayers.value & (1 << hit.collider.gameObject.layer)) != 0;
-                if (Vector2.Dot(hit.normal, -direction) <= FacingSurface || (hitOneWay && !LandsOn(hit, direction)))
+                int layerBit = 1 << hit.collider.gameObject.layer;
+                bool hitCore = (platformCoreLayers.value & layerBit) != 0;
+                bool hitOneWay = hitCore || (oneWayLayers.value & layerBit) != 0;
+                bool stops = !hitOneWay || LandsOn(hit, direction) || (hitCore && BumpsInto(hit, direction));
+                if (Vector2.Dot(hit.normal, -direction) <= FacingSurface || !stops)
                 {
                     continue;
                 }
@@ -121,6 +129,14 @@ namespace Ashbound.Gameplay.Physics
         {
             bool fromAbove = bodyCollider.bounds.min.y >= hit.point.y - LandingTolerance;
             return direction.y < 0f && fromAbove && dropTimer <= 0f;
+        }
+
+        // A body whose head is already past the underside keeps rising, so a platform corner never
+        // catches a jump that started at the open end.
+        private bool BumpsInto(in RaycastHit2D hit, Vector2 direction)
+        {
+            bool fromBelow = bodyCollider.bounds.max.y <= hit.point.y + LandingTolerance;
+            return direction.y > 0f && hit.distance > 0f && fromBelow;
         }
     }
 }

@@ -17,6 +17,9 @@ MonoBehaviour:
   knockback: 5
   moveSpeed: 1.6
   patrolSpeedScale: 0.5
+  patrolRadius: 4
+  patrolLegTime: 3
+  patrolRestTime: 2.5
   gravity: 40
   knockbackDecay: 30
   flies: 0
@@ -29,6 +32,7 @@ MonoBehaviour:
   aggroHeight: 4
   attackRange: 8
   attackHeight: 2.5
+  giveUpTime: 1
   telegraphTime: 0.6
   strikeTime: 0.2
   strikeMoveScale: 0

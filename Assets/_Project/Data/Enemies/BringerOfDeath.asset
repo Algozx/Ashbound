@@ -20,7 +20,7 @@ MonoBehaviour:
   moveSpeed: 2.5
   meleeRange: 3.5
   meleeWindup: 0.4
-  meleeStrike: 0.4
+  meleeStrike: 0.6
   castWindup: 0.5
   castRelease: 0.4
   recover: 1

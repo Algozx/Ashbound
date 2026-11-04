@@ -15,6 +15,7 @@ namespace Ashbound.Tests
                 AttackHeight = 1.5f,
                 CanJump = canJump,
                 JumpReach = 6f,
+                JumpHeight = 4.5f,
                 JumpCooldown = 1f,
             });
             brain.Tick(Senses(5f, 0f));
@@ -78,6 +79,30 @@ namespace Ashbound.Tests
             brain.Tick(Senses(8f, 4f));
 
             Assert.IsFalse(brain.ConsumeJump());
+        }
+
+        [Test]
+        public void IgnoresATargetTooHighToReach()
+        {
+            EnemyBrain brain = ChasingBrain();
+
+            brain.Tick(Senses(3f, 6f));
+
+            Assert.IsFalse(brain.ConsumeJump());
+        }
+
+        [Test]
+        public void WalksToThePlatformEndInsteadOfJumpingUnderIt()
+        {
+            EnemyBrain brain = ChasingBrain();
+            EnemySenses senses = Senses(1f, 4f);
+            senses.ClimbDetour = -1;
+
+            brain.Tick(senses);
+
+            Assert.IsFalse(brain.ConsumeJump());
+            Assert.AreEqual(-1, brain.Facing);
+            Assert.AreEqual(-1f, brain.MoveX);
         }
 
         [Test]

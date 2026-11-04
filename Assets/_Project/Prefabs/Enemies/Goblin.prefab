@@ -257,6 +257,9 @@ MonoBehaviour:
   oneWayLayers:
     serializedVersion: 2
     m_Bits: 4096
+  platformCoreLayers:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!114 &7618090887002180766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +327,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.Hitbox
   size: {x: 2.2, y: 1.7}
+  extraSize: {x: 0, y: 0}
+  extraOffset: {x: 0, y: 0}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128

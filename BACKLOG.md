@@ -12,3 +12,4 @@ Deliberately outside the current milestone. One line each: idea, why it was defe
 - Pixel Perfect Camera: wait until the first real art is in the project (2026-11-04).
 
 ## Content
+- Patrolling enemies could also jump onto platforms, not only steps (2026-11-04).

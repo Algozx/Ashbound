@@ -121,6 +121,31 @@ two swings in a row, so distance is not safe. Spells open a portal over the play
 later. At half health it recovers faster and casts three spells. Hits never stagger it.
 **Why:** A run needs a clear goal, and two attack types force both dodging and repositioning.
 
+## 2026-11-04: Platforms are entered at their ends
+**Decision:** The middle of a platform is on its own layer, `PlatformCore`. Bodies land on it and drop
+through it, but they cannot rise through it. The end tiles stay one-way, and they are drawn lighter so
+the way up is readable. A body whose head is already past the underside keeps rising, so a corner never
+catches a jump. Skeletons and goblins under a platform walk to the nearest free column before jumping,
+and they ignore targets higher than their jump. Flying enemies ignore the middle.
+**Why:** After the M1.3 playtest, passing through a platform anywhere felt confusing. This supersedes
+the part of the earlier one-way entry that let bodies pass from below at any point.
+
+## 2026-11-04: Enemies patrol, give up and go home
+**Decision:** Enemies walk around their spawn point and rest between walks, varied by the run's seed.
+Jumpers climb steps and sometimes drop off ledges on patrol, and flying enemies cruise above their
+spawn point. When the player leaves the enemy's area, or there is no way forward for a second, the
+enemy walks home and ignores the player for two seconds, unless it is hit. If home cannot be reached,
+the spot it stopped at becomes its home.
+**Why:** Enemies stood frozen at the limit of their room, which looked like a bug. Patrols also make
+rooms feel alive before a fight starts.
+
+## 2026-11-04: Boss swing follows the art
+**Decision:** The swing uses two boxes measured from the sprite frames: a low one 6 units long and an
+upper one that follows the arc. The damage window covers every frame that shows the scythe, and the
+full animation now plays. Hitboxes support an optional second box for this.
+**Why:** The old box ended 1.5 units short of the scythe and closed before the animation did, so a
+visible hit could miss. The boss now reaches further, which makes the fight harder.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

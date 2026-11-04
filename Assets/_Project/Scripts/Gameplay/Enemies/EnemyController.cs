@@ -1,6 +1,7 @@
 using System.Collections;
 using Ashbound.Gameplay.Combat;
 using Ashbound.Gameplay.Physics;
+using Ashbound.Logic;
 using Ashbound.Logic.Combat;
 using Ashbound.Logic.Enemies;
 using UnityEngine;
@@ -16,6 +17,10 @@ namespace Ashbound.Gameplay.Enemies
         private const float LookAhead = 0.1f;
         private const float LedgeProbeDepth = 0.6f;
         private const float TargetChestHeight = 1f;
+        private const float ClimbMinHeight = 1f;
+        private const float ClimbClearance = 0.5f;
+        private const float DetourStep = 0.5f;
+        private const float DetourSearch = 8f;
 
         private static readonly int WalkState = Animator.StringToHash("Walk");
         private static readonly int IdleState = Animator.StringToHash("Idle");
@@ -51,8 +56,9 @@ namespace Ashbound.Gameplay.Enemies
         public int CurrentHealth => health.Current;
 
         /// <summary>Prepares a spawned enemy: who it hunts, where it stays and how strong it is.</summary>
-        public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale)
+        public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale, SeededRandom patrolRandom)
         {
+            brain.UseRandom(patrolRandom);
             target = newTarget;
             minX = roomMinX;
             maxX = roomMaxX;
@@ -123,6 +129,8 @@ namespace Ashbound.Gameplay.Enemies
             bool ledge = IsAtLedge();
             brain.Tick(new EnemySenses
             {
+                X = transform.position.x,
+                Y = transform.position.y,
                 ToTargetX = toTarget.x,
                 ToTargetY = toTarget.y,
                 BlockedAhead = roomEdge || wall || ledge,
@@ -130,6 +138,8 @@ namespace Ashbound.Gameplay.Enemies
                 LedgeAhead = ledge,
                 RoomEdgeAhead = roomEdge,
                 Grounded = mover.Grounded,
+                TargetOutsideTerritory = target.position.x < minX || target.position.x > maxX,
+                ClimbDetour = FindClimbDetour(toTarget),
                 DeltaTime = dt,
             });
 
@@ -208,6 +218,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 case EnemyState.Patrol:
                 case EnemyState.Chase:
+                case EnemyState.Return:
                     return WalkState;
                 case EnemyState.Telegraph:
                 case EnemyState.Strike:
@@ -246,6 +257,48 @@ namespace Ashbound.Gameplay.Enemies
             Bounds bounds = bodyCollider.bounds;
             var foot = new Vector2(bounds.center.x + brain.Facing * (bounds.extents.x + LookAhead), bounds.min.y + 0.05f);
             return !UnityEngine.Physics2D.Raycast(foot, Vector2.down, LedgeProbeDepth, mover.GroundLayers);
+        }
+
+        // Platforms are only entered at their ends, so an enemy under one walks to the nearest free
+        // column before it jumps. Returns the side to walk to, or zero when the way up is free.
+        private int FindClimbDetour(Vector2 toTarget)
+        {
+            if (!definition.CanJump || !mover.Grounded || toTarget.y < ClimbMinHeight)
+            {
+                return 0;
+            }
+
+            float x = transform.position.x;
+            if (IsColumnFree(x))
+            {
+                return 0;
+            }
+
+            for (float offset = DetourStep; offset <= DetourSearch; offset += DetourStep)
+            {
+                bool rightFree = IsColumnFree(x + offset);
+                bool leftFree = IsColumnFree(x - offset);
+                if (rightFree && leftFree)
+                {
+                    return toTarget.x >= 0f ? 1 : -1;
+                }
+
+                if (rightFree || leftFree)
+                {
+                    return rightFree ? 1 : -1;
+                }
+            }
+
+            return 0;
+        }
+
+        private bool IsColumnFree(float x)
+        {
+            Bounds bounds = bodyCollider.bounds;
+            float rise = definition.JumpHeight;
+            var center = new Vector2(x, bounds.max.y + rise * 0.5f);
+            var size = new Vector2(bounds.size.x + ClimbClearance * 2f, rise);
+            return UnityEngine.Physics2D.OverlapBox(center, size, 0f, mover.PlatformCoreLayers) == null;
         }
 
         private IEnumerator RemoveCorpse()

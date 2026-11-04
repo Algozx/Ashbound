@@ -10,5 +10,7 @@ namespace Ashbound.Logic.Enemies
         Recover,
         Hurt,
         Dead,
+        Rest,
+        Return,
     }
 }

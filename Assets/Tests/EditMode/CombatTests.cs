@@ -28,7 +28,7 @@ namespace Ashbound.Tests
 
         private static EnemySenses Senses(float toTargetX, bool blocked = false)
         {
-            return new EnemySenses { ToTargetX = toTargetX, BlockedAhead = blocked, DeltaTime = Step };
+            return new EnemySenses { ToTargetX = toTargetX, BlockedAhead = blocked, Grounded = true, DeltaTime = Step };
         }
 
         private static void Run(EnemyBrain brain, EnemySenses senses, float seconds)
