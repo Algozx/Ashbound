@@ -14,6 +14,7 @@ namespace Ashbound.Gameplay.Levels
     {
         private const ulong RoomStream = 1;
         private const ulong SpawnStream = 2;
+        private const ulong LootStream = 3;
         private const float RoomMargin = 2.5f;
 
         [SerializeField] private Room startRoom;
@@ -22,6 +23,7 @@ namespace Ashbound.Gameplay.Levels
         [SerializeField] private EnemyController[] enemyPool;
         [SerializeField] private PlayerCombat player;
         [SerializeField] private int roomsPerRun = 3;
+        [SerializeField] private LootEntry[] loot;
         [Header("Difficulty")]
         [Tooltip("Extra enemy health and damage per room, as a share of the base value.")]
         [SerializeField] private float statStepPerRoom = 0.3f;
@@ -63,6 +65,7 @@ namespace Ashbound.Gameplay.Levels
             var random = new SeededRandom(Seed);
             SeededRandom roomRandom = random.Fork(RoomStream);
             SeededRandom spawnRandom = random.Fork(SpawnStream);
+            SeededRandom lootRandom = random.Fork(LootStream);
 
             Room previous = Instantiate(startRoom, transform);
             previous.PlaceEntryAt(Vector3.zero);
@@ -74,6 +77,7 @@ namespace Ashbound.Gameplay.Levels
             {
                 previous = PlaceAfter(roomPool[chain[depth]], previous);
                 SpawnEnemies(previous, spawnRandom, difficulty, depth);
+                SpawnLoot(previous, lootRandom);
             }
 
             Room last = PlaceAfter(exitRoom, previous);
@@ -103,6 +107,18 @@ namespace Ashbound.Gameplay.Levels
                     enemy.Configure(player.transform, room.Entry.position.x + RoomMargin, room.Exit.position.x - RoomMargin, difficulty.StatScale(depth));
                 }
             }
+        }
+
+        private void SpawnLoot(Room room, SeededRandom random)
+        {
+            var weights = new int[loot.Length];
+            for (int i = 0; i < loot.Length; i++)
+            {
+                weights[i] = loot[i].Weight;
+            }
+
+            GameObject prefab = loot[LootTable.Pick(random, weights)].Prefab;
+            Instantiate(prefab, room.LootSpawn.position, Quaternion.identity, room.transform);
         }
 
         private void OnPlayerDied()

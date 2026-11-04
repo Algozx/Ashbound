@@ -18,6 +18,13 @@ namespace Ashbound.Logic.Enemies
         /// <summary>Forward movement during the strike, as a share of the enemy's speed.</summary>
         public float StrikeMoveScale;
 
+        public bool CanJump;
+
+        /// <summary>Farthest horizontal distance at which the enemy jumps toward a higher target.</summary>
+        public float JumpReach;
+
+        public float JumpCooldown;
+
         public bool Flies;
 
         /// <summary>How far above the target a flying enemy stays.</summary>

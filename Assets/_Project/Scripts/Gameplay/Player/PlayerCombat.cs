@@ -1,5 +1,6 @@
 using System;
 using Ashbound.Gameplay.Combat;
+using Ashbound.Gameplay.Pickups;
 using Ashbound.Logic.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ namespace Ashbound.Gameplay.Player
     {
         [SerializeField] private WeaponDefinition weapon;
         [SerializeField] private InputActionReference attackAction;
+        [SerializeField] private InputActionReference interactAction;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private CombatFeedback feedback;
 
@@ -31,16 +33,45 @@ namespace Ashbound.Gameplay.Player
         private Health health;
         private float[] stepDurations;
         private AttackStep currentStep;
+        private WeaponPickup nearbyPickup;
 
         public int CurrentHealth => health.Current;
 
         public int MaxHealth => health.Max;
+
+        public WeaponDefinition Weapon => weapon;
+
+        /// <summary>Raised when the equipped weapon changes.</summary>
+        public event Action<WeaponDefinition> WeaponChanged;
+
+        /// <summary>Raised with the pickup in reach, or null when there is none.</summary>
+        public event Action<WeaponPickup> NearbyPickupChanged;
 
         /// <summary>Raised with current and maximum health after a hit.</summary>
         public event Action<int, int> HealthChanged;
 
         /// <summary>Raised once, on the killing hit.</summary>
         public event Action Died;
+
+        public void Equip(WeaponDefinition newWeapon)
+        {
+            EndAttack();
+            UseWeapon(newWeapon);
+            WeaponChanged?.Invoke(weapon);
+        }
+
+        public void Heal(int amount)
+        {
+            health.Heal(amount);
+            HealthChanged?.Invoke(health.Current, health.Max);
+        }
+
+        /// <summary>Tells the player which weapon on the ground the interact button would take.</summary>
+        public void SetNearbyPickup(WeaponPickup pickup)
+        {
+            nearbyPickup = pickup;
+            NearbyPickupChanged?.Invoke(pickup);
+        }
 
         public bool TakeHit(in HitInfo hit)
         {
@@ -68,14 +99,21 @@ namespace Ashbound.Gameplay.Player
         private void Awake()
         {
             controller = GetComponent<PlayerController>();
-            combo = new AttackCombo(attackBufferTime, weapon.ComboWindow);
             health = new Health(maxHealth);
+            UseWeapon(weapon);
+        }
+
+        private void UseWeapon(WeaponDefinition newWeapon)
+        {
+            weapon = newWeapon;
+            combo = new AttackCombo(attackBufferTime, weapon.ComboWindow);
             stepDurations = weapon.StepDurations();
         }
 
         private void OnEnable()
         {
             attackAction.action.Enable();
+            interactAction.action.Enable();
             hitbox.HitLanded += OnHitLanded;
         }
 
@@ -89,6 +127,11 @@ namespace Ashbound.Gameplay.Player
             if (attackAction.action.WasPressedThisFrame())
             {
                 combo.Press();
+            }
+
+            if (nearbyPickup != null && !health.IsDead && interactAction.action.WasPressedThisFrame())
+            {
+                nearbyPickup.Take(this);
             }
 
             if (controller.IsDashing && combo.IsActive)

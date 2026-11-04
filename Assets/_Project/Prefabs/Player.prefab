@@ -230,6 +230,9 @@ MonoBehaviour:
   solidLayers:
     serializedVersion: 2
     m_Bits: 64
+  oneWayLayers:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!82 &4660877478247271569
 AudioSource:
   m_ObjectHideFlags: 0
@@ -417,6 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerCombat
   weapon: {fileID: 11400000, guid: 731712e14c7bb864c84ed82cf11237e2, type: 2}
   attackAction: {fileID: -8360104705758736140, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  interactAction: {fileID: 1248542623380997615, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   hitbox: {fileID: 441990901335554244}
   feedback: {fileID: 2471775014140377627}
   maxHealth: 100

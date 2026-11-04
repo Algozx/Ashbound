@@ -162,6 +162,15 @@ MonoBehaviour:
   - {fileID: 8207147374973633234, guid: 1259d59b0a16e4040913e4b41ba32fb4, type: 3}
   player: {fileID: 1109068951}
   roomsPerRun: 3
+  loot:
+  - prefab: {fileID: 4140624688520277673, guid: 1972570df33986a40abcc3647b3602c7, type: 3}
+    weight: 3
+  - prefab: {fileID: 984484900529624346, guid: d34d47b9be95f0347b6b535dc3cfcfa9, type: 3}
+    weight: 1
+  - prefab: {fileID: 2747956897451770082, guid: eaa2408ffb0145144b6a129b674aa370, type: 3}
+    weight: 1
+  - prefab: {fileID: 4795494410927518288, guid: 16d02a5e68a0d6246abde288eb8ed3aa, type: 3}
+    weight: 1
   statStepPerRoom: 0.3
   baseSpawnChance: 0.6
   spawnChanceStep: 0.2

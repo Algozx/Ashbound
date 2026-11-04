@@ -20,6 +20,10 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private float knockbackDecay = 30f;
         [SerializeField] private bool flies;
         [SerializeField] private float hoverHeight = 1f;
+        [SerializeField] private bool canJump;
+        [SerializeField] private float jumpSpeed = 19f;
+        [SerializeField] private float jumpReach = 6f;
+        [SerializeField] private float jumpCooldown = 1f;
 
         [Header("Senses")]
         [SerializeField] private float aggroRange = 9f;
@@ -52,6 +56,8 @@ namespace Ashbound.Gameplay.Enemies
 
         public bool Flies => flies;
 
+        public float JumpSpeed => jumpSpeed;
+
         public Projectile Projectile => projectile;
 
         public Vector2 MuzzleOffset => muzzleOffset;
@@ -70,6 +76,9 @@ namespace Ashbound.Gameplay.Enemies
                 StrikeMoveScale = strikeMoveScale,
                 RecoverTime = recoverTime,
                 HurtTime = hurtTime,
+                CanJump = canJump,
+                JumpReach = jumpReach,
+                JumpCooldown = jumpCooldown,
                 Flies = flies,
                 HoverHeight = hoverHeight,
             };

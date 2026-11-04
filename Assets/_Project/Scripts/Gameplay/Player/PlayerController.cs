@@ -13,6 +13,8 @@ namespace Ashbound.Gameplay.Player
     public sealed class PlayerController : MonoBehaviour
     {
         private const float BlinkRate = 16f;
+        private const float DropThroughStick = -0.5f;
+        private const float DropThroughTime = 0.25f;
 
         private static readonly int IdleState = Animator.StringToHash("Idle");
         private static readonly int RunState = Animator.StringToHash("Run");
@@ -113,9 +115,16 @@ namespace Ashbound.Gameplay.Player
         {
             mover.ProbeGround();
 
+            Vector2 stick = dead ? Vector2.zero : moveAction.action.ReadValue<Vector2>();
+            if (jumpQueued && stick.y < DropThroughStick && mover.OnOneWayPlatform)
+            {
+                mover.DropThrough(DropThroughTime);
+                jumpQueued = false;
+            }
+
             motor.Step(new MotorInput
             {
-                MoveX = dead ? 0f : moveAction.action.ReadValue<Vector2>().x,
+                MoveX = stick.x,
                 JumpPressed = jumpQueued && !dead,
                 JumpHeld = jumpAction.action.IsPressed() && !dead,
                 DashPressed = dashQueued && !dead,
