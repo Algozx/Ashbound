@@ -16,6 +16,11 @@ namespace Ashbound.Gameplay.Enemies
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 3.5f;
         [SerializeField, Range(0f, 1f)] private float patrolSpeedScale = 0.5f;
+        [Tooltip("How far from its spawn point the enemy patrols.")]
+        [SerializeField] private float patrolRadius = 8f;
+        [Tooltip("Average seconds walking before a rest.")]
+        [SerializeField] private float patrolLegTime = 3f;
+        [SerializeField] private float patrolRestTime = 1.2f;
         [SerializeField] private float gravity = 40f;
         [SerializeField] private float knockbackDecay = 30f;
         [SerializeField] private bool flies;
@@ -30,6 +35,8 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private float aggroHeight = 3f;
         [SerializeField] private float attackRange = 2f;
         [SerializeField] private float attackHeight = 1.5f;
+        [Tooltip("Seconds without a way to the player before the enemy goes back home.")]
+        [SerializeField] private float giveUpTime = 1f;
 
         [Header("Attack rhythm")]
         [SerializeField] private float telegraphTime = 0.5f;
@@ -58,6 +65,11 @@ namespace Ashbound.Gameplay.Enemies
 
         public float JumpSpeed => jumpSpeed;
 
+        public bool CanJump => canJump;
+
+        /// <summary>How high a jump rises.</summary>
+        public float JumpHeight => jumpSpeed * jumpSpeed / (2f * gravity);
+
         public Projectile Projectile => projectile;
 
         public Vector2 MuzzleOffset => muzzleOffset;
@@ -67,6 +79,11 @@ namespace Ashbound.Gameplay.Enemies
             return new EnemyBrainSettings
             {
                 PatrolSpeedScale = patrolSpeedScale,
+                PatrolRadius = patrolRadius,
+                PatrolLegTime = patrolLegTime,
+                PatrolRestTime = patrolRestTime,
+                GiveUpTime = giveUpTime,
+                JumpHeight = JumpHeight,
                 AggroRange = aggroRange,
                 AggroHeight = aggroHeight,
                 AttackRange = attackRange,

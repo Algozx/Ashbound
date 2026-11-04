@@ -109,7 +109,7 @@ namespace Ashbound.Gameplay.Levels
                 {
                     EnemyController prefab = enemyPool[random.NextInt(0, enemyPool.Length)];
                     EnemyController enemy = Instantiate(prefab, room.EnemySpawns[i].position, Quaternion.identity, room.transform);
-                    enemy.Configure(player.transform, room.Entry.position.x + RoomMargin, room.Exit.position.x - RoomMargin, difficulty.StatScale(depth));
+                    enemy.Configure(player.transform, room.Entry.position.x + RoomMargin, room.Exit.position.x - RoomMargin, difficulty.StatScale(depth), random.Fork((ulong)i + 1));
                 }
             }
         }

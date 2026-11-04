@@ -4,6 +4,18 @@ namespace Ashbound.Logic.Enemies
     public sealed class EnemyBrainSettings
     {
         public float PatrolSpeedScale;
+
+        /// <summary>How far from home the enemy patrols. Zero means no limit.</summary>
+        public float PatrolRadius;
+
+        /// <summary>Average time walking before a rest. Zero means it never rests.</summary>
+        public float PatrolLegTime;
+
+        public float PatrolRestTime;
+
+        /// <summary>Time without a way to the target before the enemy goes home. Zero means never.</summary>
+        public float GiveUpTime;
+
         public float AggroRange;
         public float AggroHeight;
         public float AttackRange;
@@ -22,6 +34,9 @@ namespace Ashbound.Logic.Enemies
 
         /// <summary>Farthest horizontal distance at which the enemy jumps toward a higher target.</summary>
         public float JumpReach;
+
+        /// <summary>Highest target the enemy tries to reach with a jump.</summary>
+        public float JumpHeight;
 
         public float JumpCooldown;
 

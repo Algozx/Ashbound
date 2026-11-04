@@ -155,7 +155,7 @@ Transform:
   m_GameObject: {fileID: 5177817791258789262}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4, y: 1.6, z: 0}
+  m_LocalPosition: {x: 3.4, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -173,7 +173,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e622fe325ddfd447985f96391626444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.Hitbox
-  size: {x: 4.8, y: 3.2}
+  size: {x: 5.2, y: 3}
+  extraSize: {x: 3.4, y: 2}
+  extraOffset: {x: -0.9, y: 2.5}
   targetLayers:
     serializedVersion: 2
     m_Bits: 128
@@ -305,6 +307,9 @@ MonoBehaviour:
   oneWayLayers:
     serializedVersion: 2
     m_Bits: 4096
+  platformCoreLayers:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!114 &4818791771370780119
 MonoBehaviour:
   m_ObjectHideFlags: 0

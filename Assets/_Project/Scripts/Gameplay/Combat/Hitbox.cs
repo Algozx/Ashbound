@@ -12,6 +12,10 @@ namespace Ashbound.Gameplay.Combat
         private const int MaxTargets = 8;
 
         [SerializeField] private Vector2 size = new Vector2(2f, 1.6f);
+        [Tooltip("Optional second box, for attacks that a single box cannot follow. Empty size turns it off.")]
+        [SerializeField] private Vector2 extraSize;
+        [Tooltip("Center of the second box from this object, for an attack facing right.")]
+        [SerializeField] private Vector2 extraOffset;
         [SerializeField] private LayerMask targetLayers;
 
         private readonly Collider2D[] results = new Collider2D[MaxTargets];
@@ -19,6 +23,7 @@ namespace Ashbound.Gameplay.Combat
         private ContactFilter2D filter;
         private HitInfo hit;
         private float baseOffsetX;
+        private int side = 1;
         private bool open;
 
         /// <summary>Raised for every hit that lands.</summary>
@@ -28,6 +33,7 @@ namespace Ashbound.Gameplay.Combat
         public void Configure(in HitInfo nextHit, int facing)
         {
             hit = nextHit;
+            side = facing;
             transform.localPosition = new Vector3(baseOffsetX * facing, transform.localPosition.y, 0f);
         }
 
@@ -56,7 +62,18 @@ namespace Ashbound.Gameplay.Combat
             }
 
             hit.SourceX = transform.parent.position.x;
-            int count = UnityEngine.Physics2D.OverlapBox(transform.position, size, 0f, filter, results);
+            HitInside(transform.position, size);
+            if (extraSize != Vector2.zero)
+            {
+                HitInside(ExtraCenter, extraSize);
+            }
+        }
+
+        private Vector2 ExtraCenter => (Vector2)transform.position + new Vector2(extraOffset.x * side, extraOffset.y);
+
+        private void HitInside(Vector2 center, Vector2 boxSize)
+        {
+            int count = UnityEngine.Physics2D.OverlapBox(center, boxSize, 0f, filter, results);
             for (int i = 0; i < count; i++)
             {
                 var target = results[i].GetComponentInParent<IDamageable>();
@@ -71,6 +88,10 @@ namespace Ashbound.Gameplay.Combat
         {
             Gizmos.color = open ? Color.red : Color.yellow;
             Gizmos.DrawWireCube(transform.position, size);
+            if (extraSize != Vector2.zero)
+            {
+                Gizmos.DrawWireCube(ExtraCenter, extraSize);
+            }
         }
     }
 }
