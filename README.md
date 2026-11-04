@@ -36,6 +36,19 @@ GitHub Pages.
 
 ## Credits
 
+Asset Store art is licensed for use in games but not for redistribution, so it lives in a private
+submodule at `Assets/_Project/Art`. A clone of this repository compiles but shows no art.
+
 | Asset | Author | License |
 |---|---|---|
-| No third-party assets yet | | |
+| [Monsters Creatures Fantasy](https://luizmelo.itch.io/monsters-creatures-fantasy) | Luiz Melo | CC0 |
+| [Pixel art castle tileset](https://opengameart.org/content/pixel-art-castle-tileset) | rubberduck | CC0 |
+| [Tiny RPG Font Kit I](https://opengameart.org/content/tiny-rpg-font-kit-i) | tiopalada | CC0 |
+| [RPG Sound Pack](https://opengameart.org/content/rpg-sound-pack) | artisticdude | CC0 |
+| [50 RPG sound effects](https://opengameart.org/content/50-rpg-sound-effects) | Kenney | CC0 |
+| [Interface Sounds](https://opengameart.org/content/interface-sounds) | Kenney | CC0 |
+| [Dark Shrine Loop](https://opengameart.org/content/dark-shrine-loop) | yd, remixed by qubodup | CC0 |
+| [Dark Cavern Ambient](https://opengameart.org/content/dark-cavern-ambient) | Paul Wortmann | CC0 |
+| Warrior, Bringer of Death | Clembod | Unity Asset Store |
+| Pixel Art Icon Pack - RPG | Cainos | Unity Asset Store |
+| GUI Fantasy Kit, RF Castle, 500 Free Skill Icons | To be confirmed | Unity Asset Store |
