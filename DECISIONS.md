@@ -85,6 +85,13 @@ and an exit room. Enemy spawns are also picked by seed. Death and the exit both 
 new nine-digit seed, and the seed is shown on screen.
 **Consequences:** Branching paths come after M0. Rebuilding the scene keeps every run clean.
 
+## 2026-11-04: Physics sync after building a run
+**Decision:** The run syncs physics transforms after placing rooms, and movement only counts surfaces
+that face the direction of travel.
+**Why:** Rooms are moved after they are created, so the first physics step could still see their
+colliders at the origin. Enemies then fell a few pixels into contact with the floor, and sideways
+casts treated the floor as a wall, which left them standing still.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

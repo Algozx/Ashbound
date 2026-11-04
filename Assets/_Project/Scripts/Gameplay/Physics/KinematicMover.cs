@@ -7,6 +7,7 @@ namespace Ashbound.Gameplay.Physics
     public sealed class KinematicMover : MonoBehaviour
     {
         private const float SkinWidth = 0.02f;
+        private const float FacingSurface = 0.5f;
         private const int MaxHits = 8;
 
         [SerializeField] private LayerMask solidLayers;
@@ -14,6 +15,7 @@ namespace Ashbound.Gameplay.Physics
         private readonly RaycastHit2D[] hits = new RaycastHit2D[MaxHits];
         private Rigidbody2D body;
         private ContactFilter2D solidFilter;
+        private float groundGap;
 
         public bool Grounded { get; private set; }
 
@@ -30,13 +32,14 @@ namespace Ashbound.Gameplay.Physics
         /// <summary>Refreshes <see cref="Grounded"/>. Call it before reading the state of this step.</summary>
         public void ProbeGround()
         {
-            Grounded = body.Cast(Vector2.down, solidFilter, hits, SkinWidth * 2f) > 0;
+            groundGap = NearestSurface(Vector2.down, SkinWidth * 2f);
+            Grounded = groundGap <= SkinWidth * 2f;
         }
 
-        /// <summary>True when something solid is within distance along direction.</summary>
+        /// <summary>True when a surface facing the body is within distance along direction.</summary>
         public bool IsBlocked(Vector2 direction, float distance)
         {
-            return body.Cast(direction, solidFilter, hits, distance) > 0;
+            return NearestSurface(direction, distance) <= distance;
         }
 
         public void Move(Vector2 velocity, float deltaTime)
@@ -46,7 +49,14 @@ namespace Ashbound.Gameplay.Physics
             float moveY = Sweep(Vector2.up * Mathf.Sign(delta.y), Mathf.Abs(delta.y));
             HitCeiling = delta.y > 0f && moveY < delta.y;
 
-            body.MovePosition(body.position + new Vector2(moveX * Mathf.Sign(delta.x), moveY * Mathf.Sign(delta.y)));
+            float signedY = moveY * Mathf.Sign(delta.y);
+            if (Grounded && delta.y <= 0f && groundGap < SkinWidth)
+            {
+                // Keeps the body off the floor, so walking never scrapes it.
+                signedY = SkinWidth - groundGap;
+            }
+
+            body.MovePosition(body.position + new Vector2(moveX * Mathf.Sign(delta.x), signedY));
         }
 
         // Distance the body can travel along direction before touching something solid.
@@ -57,14 +67,24 @@ namespace Ashbound.Gameplay.Physics
                 return 0f;
             }
 
-            int count = body.Cast(direction, solidFilter, hits, distance + SkinWidth);
-            float allowed = distance;
+            float nearest = NearestSurface(direction, distance + SkinWidth);
+            return Mathf.Min(distance, Mathf.Max(0f, nearest - SkinWidth));
+        }
+
+        // Only surfaces that face the movement count, so a floor never stops a sideways step.
+        private float NearestSurface(Vector2 direction, float distance)
+        {
+            int count = body.Cast(direction, solidFilter, hits, distance);
+            float nearest = float.PositiveInfinity;
             for (int i = 0; i < count; i++)
             {
-                allowed = Mathf.Min(allowed, Mathf.Max(0f, hits[i].distance - SkinWidth));
+                if (Vector2.Dot(hits[i].normal, -direction) > FacingSurface)
+                {
+                    nearest = Mathf.Min(nearest, hits[i].distance);
+                }
             }
 
-            return allowed;
+            return nearest;
         }
     }
 }
