@@ -9,6 +9,9 @@ namespace Ashbound.Gameplay.Levels
         [SerializeField] private Transform exit;
         [SerializeField] private Transform playerStart;
         [SerializeField] private Transform[] enemySpawns;
+        [SerializeField] private Transform lootSpawn;
+
+        public Transform LootSpawn => lootSpawn;
 
         public Transform Entry => entry;
 

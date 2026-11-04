@@ -21,8 +21,12 @@ MonoBehaviour:
   knockbackDecay: 30
   flies: 0
   hoverHeight: 1
+  canJump: 0
+  jumpSpeed: 19
+  jumpReach: 6
+  jumpCooldown: 1
   aggroRange: 12
-  aggroHeight: 3
+  aggroHeight: 4
   attackRange: 8
   attackHeight: 2.5
   telegraphTime: 0.6

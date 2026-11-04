@@ -17,6 +17,15 @@ namespace Ashbound.Logic.Combat
 
         public bool IsDead => Current <= 0;
 
+        /// <summary>Restores hit points, up to the maximum. A dead body stays dead.</summary>
+        public void Heal(int amount)
+        {
+            if (!IsDead)
+            {
+                Current = Math.Min(Max, Current + amount);
+            }
+        }
+
         /// <summary>Removes hit points and reports whether this hit was the killing one.</summary>
         public bool Damage(int amount)
         {

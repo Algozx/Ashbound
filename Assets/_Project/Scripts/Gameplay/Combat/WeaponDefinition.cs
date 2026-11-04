@@ -10,11 +10,17 @@ namespace Ashbound.Gameplay.Combat
     [CreateAssetMenu(menuName = "Ashbound/Weapon Definition", fileName = "WeaponDefinition")]
     public sealed class WeaponDefinition : ScriptableObject
     {
+        [SerializeField] private string displayName = "Weapon";
+        [SerializeField] private Sprite icon;
         [SerializeField] private AnimationClip attackClip;
         [SerializeField, Range(0f, 1f)] private float moveScale = 0.8f;
         [SerializeField] private bool blocksJump;
         [SerializeField] private float comboWindow = 0.35f;
         [SerializeField] private AttackStep[] steps;
+
+        public string DisplayName => displayName;
+
+        public Sprite Icon => icon;
 
         public float MoveScale => moveScale;
 

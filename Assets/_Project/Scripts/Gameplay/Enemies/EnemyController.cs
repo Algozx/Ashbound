@@ -118,13 +118,25 @@ namespace Ashbound.Gameplay.Enemies
             mover.ProbeGround();
 
             Vector2 toTarget = target.position - transform.position;
+            bool roomEdge = IsAtRoomEdge();
+            bool wall = mover.IsBlocked(new Vector2(brain.Facing, 0f), LookAhead);
+            bool ledge = IsAtLedge();
             brain.Tick(new EnemySenses
             {
                 ToTargetX = toTarget.x,
                 ToTargetY = toTarget.y,
-                BlockedAhead = IsBlockedAhead(),
+                BlockedAhead = roomEdge || wall || ledge,
+                WallAhead = wall,
+                LedgeAhead = ledge,
+                RoomEdgeAhead = roomEdge,
+                Grounded = mover.Grounded,
                 DeltaTime = dt,
             });
+
+            if (brain.ConsumeJump())
+            {
+                fallVelocity = definition.JumpSpeed;
+            }
 
             knockbackVelocity = Mathf.MoveTowards(knockbackVelocity, 0f, definition.KnockbackDecay * dt);
             mover.Move(new Vector2(brain.MoveX * definition.MoveSpeed + knockbackVelocity, VerticalVelocity(dt)), dt);
@@ -138,7 +150,13 @@ namespace Ashbound.Gameplay.Enemies
                 return brain.MoveY * definition.MoveSpeed;
             }
 
-            fallVelocity = mover.Grounded ? 0f : fallVelocity - definition.Gravity * dt;
+            if (mover.HitCeiling && fallVelocity > 0f)
+            {
+                fallVelocity = 0f;
+            }
+
+            bool landed = mover.Grounded && fallVelocity <= 0f;
+            fallVelocity = landed ? 0f : fallVelocity - definition.Gravity * dt;
             return fallVelocity;
         }
 
@@ -212,28 +230,22 @@ namespace Ashbound.Gameplay.Enemies
             projectiles.Get().Launch(muzzle, aim - muzzle, hit, projectiles.Release);
         }
 
-        private bool IsBlockedAhead()
+        private bool IsAtRoomEdge()
         {
             float x = transform.position.x;
-            if ((brain.Facing > 0 && x >= maxX) || (brain.Facing < 0 && x <= minX))
-            {
-                return true;
-            }
+            return (brain.Facing > 0 && x >= maxX) || (brain.Facing < 0 && x <= minX);
+        }
 
-            var direction = new Vector2(brain.Facing, 0f);
-            if (mover.IsBlocked(direction, LookAhead))
-            {
-                return true;
-            }
-
-            if (definition.Flies)
+        private bool IsAtLedge()
+        {
+            if (definition.Flies || !mover.Grounded)
             {
                 return false;
             }
 
             Bounds bounds = bodyCollider.bounds;
             var foot = new Vector2(bounds.center.x + brain.Facing * (bounds.extents.x + LookAhead), bounds.min.y + 0.05f);
-            return mover.Grounded && !UnityEngine.Physics2D.Raycast(foot, Vector2.down, LedgeProbeDepth, mover.SolidLayers);
+            return !UnityEngine.Physics2D.Raycast(foot, Vector2.down, LedgeProbeDepth, mover.GroundLayers);
         }
 
         private IEnumerator RemoveCorpse()

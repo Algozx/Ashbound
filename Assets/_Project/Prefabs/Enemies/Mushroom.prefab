@@ -302,6 +302,9 @@ MonoBehaviour:
   solidLayers:
     serializedVersion: 2
     m_Bits: 64
+  oneWayLayers:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!114 &6204778707565411512
 MonoBehaviour:
   m_ObjectHideFlags: 0

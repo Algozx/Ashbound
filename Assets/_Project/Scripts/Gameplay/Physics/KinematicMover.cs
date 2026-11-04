@@ -2,44 +2,64 @@ using UnityEngine;
 
 namespace Ashbound.Gameplay.Physics
 {
-    /// <summary>Moves a kinematic body and stops it against solid layers.</summary>
+    /// <summary>
+    /// Moves a kinematic body and stops it against solid layers. One-way platforms only stop a body
+    /// that lands on them from above.
+    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public sealed class KinematicMover : MonoBehaviour
     {
         private const float SkinWidth = 0.02f;
         private const float FacingSurface = 0.5f;
+        private const float LandingTolerance = 0.05f;
         private const int MaxHits = 8;
 
         [SerializeField] private LayerMask solidLayers;
+        [SerializeField] private LayerMask oneWayLayers;
 
         private readonly RaycastHit2D[] hits = new RaycastHit2D[MaxHits];
         private Rigidbody2D body;
-        private ContactFilter2D solidFilter;
+        private Collider2D bodyCollider;
+        private ContactFilter2D filter;
         private float groundGap;
+        private float dropTimer;
 
         public bool Grounded { get; private set; }
 
         public bool HitCeiling { get; private set; }
 
-        public LayerMask SolidLayers => solidLayers;
+        /// <summary>True while the body stands on a platform it could drop through.</summary>
+        public bool OnOneWayPlatform { get; private set; }
+
+        /// <summary>Everything a body can stand on.</summary>
+        public LayerMask GroundLayers => solidLayers | oneWayLayers;
+
+        /// <summary>Lets the body fall through one-way platforms for a moment.</summary>
+        public void DropThrough(float seconds)
+        {
+            dropTimer = seconds;
+        }
 
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
-            solidFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = solidLayers };
+            bodyCollider = GetComponent<Collider2D>();
+            filter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = solidLayers | oneWayLayers };
         }
 
         /// <summary>Refreshes <see cref="Grounded"/>. Call it before reading the state of this step.</summary>
         public void ProbeGround()
         {
-            groundGap = NearestSurface(Vector2.down, SkinWidth * 2f);
+            dropTimer = Mathf.Max(0f, dropTimer - Time.fixedDeltaTime);
+            groundGap = NearestSurface(Vector2.down, SkinWidth * 2f, out bool oneWay);
             Grounded = groundGap <= SkinWidth * 2f;
+            OnOneWayPlatform = Grounded && oneWay;
         }
 
         /// <summary>True when a surface facing the body is within distance along direction.</summary>
         public bool IsBlocked(Vector2 direction, float distance)
         {
-            return NearestSurface(direction, distance) <= distance;
+            return NearestSurface(direction, distance, out _) <= distance;
         }
 
         public void Move(Vector2 velocity, float deltaTime)
@@ -67,24 +87,40 @@ namespace Ashbound.Gameplay.Physics
                 return 0f;
             }
 
-            float nearest = NearestSurface(direction, distance + SkinWidth);
+            float nearest = NearestSurface(direction, distance + SkinWidth, out _);
             return Mathf.Min(distance, Mathf.Max(0f, nearest - SkinWidth));
         }
 
         // Only surfaces that face the movement count, so a floor never stops a sideways step.
-        private float NearestSurface(Vector2 direction, float distance)
+        private float NearestSurface(Vector2 direction, float distance, out bool oneWay)
         {
-            int count = body.Cast(direction, solidFilter, hits, distance);
+            int count = body.Cast(direction, filter, hits, distance);
             float nearest = float.PositiveInfinity;
+            oneWay = false;
+
             for (int i = 0; i < count; i++)
             {
-                if (Vector2.Dot(hits[i].normal, -direction) > FacingSurface)
+                RaycastHit2D hit = hits[i];
+                bool hitOneWay = (oneWayLayers.value & (1 << hit.collider.gameObject.layer)) != 0;
+                if (Vector2.Dot(hit.normal, -direction) <= FacingSurface || (hitOneWay && !LandsOn(hit, direction)))
                 {
-                    nearest = Mathf.Min(nearest, hits[i].distance);
+                    continue;
+                }
+
+                if (hit.distance < nearest)
+                {
+                    nearest = hit.distance;
+                    oneWay = hitOneWay;
                 }
             }
 
             return nearest;
+        }
+
+        private bool LandsOn(in RaycastHit2D hit, Vector2 direction)
+        {
+            bool fromAbove = bodyCollider.bounds.min.y >= hit.point.y - LandingTolerance;
+            return direction.y < 0f && fromAbove && dropTimer <= 0f;
         }
     }
 }

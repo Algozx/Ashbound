@@ -6,6 +6,10 @@ namespace Ashbound.Logic.Enemies
         public float ToTargetX;
         public float ToTargetY;
         public bool BlockedAhead;
+        public bool WallAhead;
+        public bool LedgeAhead;
+        public bool RoomEdgeAhead;
+        public bool Grounded;
         public float DeltaTime;
     }
 }

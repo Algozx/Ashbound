@@ -101,6 +101,19 @@ room. The signature mechanic is now chosen in the middle of M1, with loot and en
 **Why:** The M0 playtest was fun but lacked challenge, and decorated rooms could need rework when
 combat changes.
 
+## 2026-11-04: One-way platforms and climbing enemies
+**Decision:** Thin platforms are one-way, on their own layer. Bodies pass through from below and land
+from above, and the player drops through with Down and Jump. Skeletons and goblins jump after the
+player, over walls and gaps, and walk off ledges to reach a lower target. Mushrooms stay on the ground.
+**Why:** After the M1.1 playtest, standing on a platform was too safe. One-way platforms let enemies
+reach the player from directly below without pathfinding.
+
+## 2026-11-04: Loot in a run
+**Decision:** Each combat room offers one seeded item: a health potion (weight 3) or a weapon (weight 1
+each). Potions work on touch and wait if health is full. Weapons are taken with Interact, and the old
+weapon stays on the ground, so a run is a choice between handling styles.
+**Consequences:** Loot sits on platforms and steps, so reaching it means leaving the fight's safe line.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

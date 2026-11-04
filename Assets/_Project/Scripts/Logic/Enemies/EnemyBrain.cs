@@ -9,9 +9,12 @@ namespace Ashbound.Logic.Enemies
     public sealed class EnemyBrain
     {
         private const float LoseInterestScale = 1.5f;
+        private const float TargetLevelGap = 1.5f;
 
         private readonly EnemyBrainSettings settings;
         private float timer;
+        private float jumpTimer;
+        private bool wantsJump;
 
         public EnemyBrain(EnemyBrainSettings settings)
         {
@@ -28,9 +31,18 @@ namespace Ashbound.Logic.Enemies
         /// <summary>Desired vertical movement of a flying enemy, as a share of its speed.</summary>
         public float MoveY { get; private set; }
 
+        /// <summary>Reports a jump request once, so the body starts one jump per decision.</summary>
+        public bool ConsumeJump()
+        {
+            bool jump = wantsJump;
+            wantsJump = false;
+            return jump;
+        }
+
         public void Tick(in EnemySenses senses)
         {
             timer = Math.Max(0f, timer - senses.DeltaTime);
+            jumpTimer = Math.Max(0f, jumpTimer - senses.DeltaTime);
 
             switch (State)
             {
@@ -124,9 +136,34 @@ namespace Ashbound.Logic.Enemies
                 return;
             }
 
+            if (ShouldJump(senses))
+            {
+                wantsJump = true;
+                jumpTimer = settings.JumpCooldown;
+            }
+
+            bool targetBelow = senses.ToTargetY < -TargetLevelGap;
+            bool willLeaveLedge = senses.LedgeAhead && !senses.WallAhead && !senses.RoomEdgeAhead
+                && (targetBelow || settings.CanJump);
+            bool blocked = senses.BlockedAhead && !willLeaveLedge && !wantsJump;
             bool closeEnough = Math.Abs(senses.ToTargetX) <= settings.AttackRange;
-            MoveX = senses.BlockedAhead || closeEnough ? 0f : Facing;
+            MoveX = blocked || closeEnough ? 0f : Facing;
             MoveY = settings.Flies ? Math.Clamp(heightGap, -1f, 1f) : 0f;
+        }
+
+        private bool ShouldJump(in EnemySenses senses)
+        {
+            if (!settings.CanJump || !senses.Grounded || jumpTimer > 0f || senses.RoomEdgeAhead)
+            {
+                return false;
+            }
+
+            bool targetAbove = senses.ToTargetY > TargetLevelGap;
+            bool targetBelow = senses.ToTargetY < -TargetLevelGap;
+            bool reachesTarget = targetAbove && Math.Abs(senses.ToTargetX) <= settings.JumpReach;
+            bool climbsWall = senses.WallAhead && !targetBelow;
+            bool crossesGap = senses.LedgeAhead && !targetBelow;
+            return reachesTarget || climbsWall || crossesGap;
         }
 
         private bool Sees(in EnemySenses senses, float range)
