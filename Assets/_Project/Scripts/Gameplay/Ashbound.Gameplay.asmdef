@@ -1,0 +1,14 @@
+{
+    "name": "Ashbound.Gameplay",
+    "rootNamespace": "Ashbound.Gameplay",
+    "references": ["Ashbound.Logic", "Unity.InputSystem"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
