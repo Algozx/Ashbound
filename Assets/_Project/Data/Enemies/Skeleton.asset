@@ -12,17 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa46af34aceeccc4d9a1e6c822d57a14, type: 3}
   m_Name: Skeleton
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyDefinition
-  maxHealth: 40
-  damage: 10
+  maxHealth: 60
+  damage: 18
   knockback: 7
   moveSpeed: 3.5
   patrolSpeedScale: 0.5
   gravity: 40
   knockbackDecay: 30
+  flies: 0
+  hoverHeight: 1
   aggroRange: 9
   aggroHeight: 3
   attackRange: 1.6
+  attackHeight: 1.5
   telegraphTime: 0.5
   strikeTime: 0.17
+  strikeMoveScale: 1.2
   recoverTime: 0.7
   hurtTime: 0.3
+  projectile: {fileID: 0}
+  muzzleOffset: {x: 0.8, y: 1.2}

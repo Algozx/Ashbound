@@ -16,7 +16,7 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private CombatFeedback feedback;
 
         [Header("Health")]
-        [SerializeField] private int maxHealth = 50;
+        [SerializeField] private int maxHealth = 100;
         [SerializeField] private float hurtStun = 0.3f;
         [SerializeField] private float hurtInvulnerability = 1f;
         [SerializeField] private float hurtLift = 5f;

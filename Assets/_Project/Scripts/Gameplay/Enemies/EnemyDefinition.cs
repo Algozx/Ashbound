@@ -1,3 +1,4 @@
+using Ashbound.Gameplay.Combat;
 using Ashbound.Logic.Enemies;
 using UnityEngine;
 
@@ -17,17 +18,25 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField, Range(0f, 1f)] private float patrolSpeedScale = 0.5f;
         [SerializeField] private float gravity = 40f;
         [SerializeField] private float knockbackDecay = 30f;
+        [SerializeField] private bool flies;
+        [SerializeField] private float hoverHeight = 1f;
 
         [Header("Senses")]
         [SerializeField] private float aggroRange = 9f;
         [SerializeField] private float aggroHeight = 3f;
         [SerializeField] private float attackRange = 2f;
+        [SerializeField] private float attackHeight = 1.5f;
 
         [Header("Attack rhythm")]
         [SerializeField] private float telegraphTime = 0.5f;
         [SerializeField] private float strikeTime = 0.17f;
+        [SerializeField] private float strikeMoveScale;
         [SerializeField] private float recoverTime = 0.7f;
         [SerializeField] private float hurtTime = 0.3f;
+
+        [Header("Ranged")]
+        [SerializeField] private Projectile projectile;
+        [SerializeField] private Vector2 muzzleOffset = new Vector2(0.8f, 1.2f);
 
         public int MaxHealth => maxHealth;
 
@@ -41,6 +50,12 @@ namespace Ashbound.Gameplay.Enemies
 
         public float KnockbackDecay => knockbackDecay;
 
+        public bool Flies => flies;
+
+        public Projectile Projectile => projectile;
+
+        public Vector2 MuzzleOffset => muzzleOffset;
+
         public EnemyBrainSettings ToBrainSettings()
         {
             return new EnemyBrainSettings
@@ -49,10 +64,14 @@ namespace Ashbound.Gameplay.Enemies
                 AggroRange = aggroRange,
                 AggroHeight = aggroHeight,
                 AttackRange = attackRange,
+                AttackHeight = attackHeight,
                 TelegraphTime = telegraphTime,
                 StrikeTime = strikeTime,
+                StrikeMoveScale = strikeMoveScale,
                 RecoverTime = recoverTime,
                 HurtTime = hurtTime,
+                Flies = flies,
+                HoverHeight = hoverHeight,
             };
         }
     }
