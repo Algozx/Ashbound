@@ -1,5 +1,6 @@
 using Ashbound.Gameplay.Combat;
 using Ashbound.Gameplay.Levels;
+using Ashbound.Gameplay.Meta;
 using Ashbound.Gameplay.Pickups;
 using Ashbound.Gameplay.Player;
 using UnityEngine;
@@ -12,11 +13,15 @@ namespace Ashbound.UI.Hud
     {
         [SerializeField] private PlayerCombat player;
         [SerializeField] private RunDirector run;
+        [SerializeField] private Progression progression;
+        [SerializeField] private PlayerFlask flask;
         [SerializeField] private Image healthFill;
         [SerializeField] private Text healthLabel;
         [SerializeField] private Text weaponLabel;
         [SerializeField] private Text promptLabel;
         [SerializeField] private Text seedLabel;
+        [SerializeField] private Text embersLabel;
+        [SerializeField] private Text flaskLabel;
         [SerializeField] private GameObject messagePanel;
         [SerializeField] private Text messageLabel;
 
@@ -24,7 +29,9 @@ namespace Ashbound.UI.Hud
         {
             player.HealthChanged += ShowHealth;
             player.WeaponChanged += ShowWeapon;
-            player.NearbyPickupChanged += ShowPrompt;
+            player.NearbyInteractableChanged += ShowPrompt;
+            progression.EmbersChanged += ShowEmbers;
+            flask.ChargesChanged += ShowFlask;
             run.RunEnded += ShowMessage;
         }
 
@@ -32,7 +39,9 @@ namespace Ashbound.UI.Hud
         {
             player.HealthChanged -= ShowHealth;
             player.WeaponChanged -= ShowWeapon;
-            player.NearbyPickupChanged -= ShowPrompt;
+            player.NearbyInteractableChanged -= ShowPrompt;
+            progression.EmbersChanged -= ShowEmbers;
+            flask.ChargesChanged -= ShowFlask;
             run.RunEnded -= ShowMessage;
         }
 
@@ -43,6 +52,8 @@ namespace Ashbound.UI.Hud
             ShowHealth(player.CurrentHealth, player.MaxHealth);
             ShowWeapon(player.Weapon);
             ShowPrompt(null);
+            ShowEmbers();
+            ShowFlask(flask.Charges);
         }
 
         private void ShowHealth(int current, int max)
@@ -56,9 +67,19 @@ namespace Ashbound.UI.Hud
             weaponLabel.text = weapon.DisplayName;
         }
 
-        private void ShowPrompt(WeaponPickup pickup)
+        private void ShowEmbers()
         {
-            promptLabel.text = pickup != null ? "F  Take " + pickup.Weapon.DisplayName : string.Empty;
+            embersLabel.text = "Embers " + progression.Wallet.Carried + "   Saved " + progression.Wallet.Banked;
+        }
+
+        private void ShowFlask(int charges)
+        {
+            flaskLabel.text = charges > 0 ? "Q  Flask x" + charges : string.Empty;
+        }
+
+        private void ShowPrompt(Interactable interactable)
+        {
+            promptLabel.text = interactable != null ? "F  " + interactable.Prompt : string.Empty;
         }
 
         private void ShowMessage(string message)

@@ -35,7 +35,7 @@ source code on GitHub and playable through GitHub Pages.
 
 ## 5. Game identity
 Setting and tone: to be defined with the first art pass.
-Signature mechanic: to be defined in the M0 proposal.
+Signature mechanic: Heat. Landing hits without being hit raises damage and the Embers enemies drop, and taking damage puts it out.
 
 ## 6. Definition of done for the first playable
 One biome assembled from a seed, one weapon, two enemy types, death and restart, running in a

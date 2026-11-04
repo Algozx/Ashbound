@@ -15,6 +15,7 @@ MonoBehaviour:
   maxHealth: 80
   damage: 14
   knockback: 5
+  embers: 5
   moveSpeed: 1.6
   patrolSpeedScale: 0.5
   patrolRadius: 4

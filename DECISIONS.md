@@ -146,6 +146,24 @@ full animation now plays. Hitboxes support an optional second box for this.
 **Why:** The old box ended 1.5 units short of the scythe and closed before the animation did, so a
 visible hit could miss. The boss now reaches further, which makes the fight harder.
 
+## 2026-11-04: Embers and permanent unlocks
+**Decision:** Enemies drop Embers, 3 to 8 each, and the boss drops 50. Dying keeps half of what the
+player carries and beating the boss keeps all of it. Embers are spent at an altar in the start room and
+at one near the end of every room, so spending before a risky fight protects them. Unlocks are three
+levels of maximum health, the dagger and heavy blade joining the loot, and a healing flask carried into
+every run. Progress is a versioned JSON profile kept in the browser.
+**Alternatives considered:** Keeping everything on death, depositing at altars, and a shop screen after
+each death.
+**Why:** The user chose losing half with altars at every room change, which makes each altar a decision.
+**Consequences:** A seed repeats a run only with the same weapons unlocked. Closing the browser during
+a run loses the Embers carried.
+
+## 2026-11-04: Signature mechanic
+**Decision:** Heat. Landing hits without being hit builds three levels of Heat, which raise damage and
+the Embers each enemy drops. Taking damage puts it out. It is built as its own slice after M1.4.
+**Alternatives considered:** A burning dash, which needs new effects and more balancing.
+**Why:** It rewards skill, links combat to the currency, and needs no new art.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

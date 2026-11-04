@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 96572421}
   - component: {fileID: 96572420}
+  - component: {fileID: 96572422}
   m_Layer: 0
   m_Name: Run
   m_TagString: Untagged
@@ -161,16 +162,21 @@ MonoBehaviour:
   - {fileID: 6204778707565411512, guid: 15ecde10c7c4aa94b9d14a810c577baa, type: 3}
   - {fileID: 8207147374973633234, guid: 1259d59b0a16e4040913e4b41ba32fb4, type: 3}
   player: {fileID: 1109068951}
+  progression: {fileID: 96572422}
   roomsPerRun: 3
   loot:
   - prefab: {fileID: 4140624688520277673, guid: 1972570df33986a40abcc3647b3602c7, type: 3}
     weight: 3
+    requiredUnlock: {fileID: 0}
   - prefab: {fileID: 984484900529624346, guid: d34d47b9be95f0347b6b535dc3cfcfa9, type: 3}
     weight: 1
+    requiredUnlock: {fileID: 11400000, guid: 9e55b454f99c96b468733586796484b7, type: 2}
   - prefab: {fileID: 2747956897451770082, guid: eaa2408ffb0145144b6a129b674aa370, type: 3}
     weight: 1
+    requiredUnlock: {fileID: 11400000, guid: cb11c16e1f810964795195fb40f4ea30, type: 2}
   - prefab: {fileID: 4795494410927518288, guid: 16d02a5e68a0d6246abde288eb8ed3aa, type: 3}
     weight: 1
+    requiredUnlock: {fileID: 0}
   statStepPerRoom: 0.3
   baseSpawnChance: 0.6
   spawnChanceStep: 0.2
@@ -191,6 +197,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &96572422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96572419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b5d09ad7422594abb33a40e869bfea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Meta.Progression
+  unlocks:
+  - {fileID: 11400000, guid: 257b86ad5bcc85f418c6937b8c8f7807, type: 2}
+  - {fileID: 11400000, guid: 574e81ff9923b3944be465e54ea8fbe5, type: 2}
+  - {fileID: 11400000, guid: 9e55b454f99c96b468733586796484b7, type: 2}
+  - {fileID: 11400000, guid: cb11c16e1f810964795195fb40f4ea30, type: 2}
+  player: {fileID: 1109068951}
+  flask: {fileID: 1109068952}
+  emberPrefab: {fileID: 8864832745260535980, guid: 1c77af477c51a354ebcc9691f1fd025f, type: 3}
 --- !u!1 &111059639
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +519,141 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &394087565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/MiddleClick
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: dad70c86-b58c-4b17-88ad-f5e53adf419e
+--- !u!1 &572911140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 572911143}
+  - component: {fileID: 572911142}
+  - component: {fileID: 572911141}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &572911141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572911140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_PointAction: {fileID: 938352450}
+  m_MoveAction: {fileID: 1245101830}
+  m_SubmitAction: {fileID: 928158789}
+  m_CancelAction: {fileID: 775037633}
+  m_LeftClickAction: {fileID: 1983999134}
+  m_MiddleClickAction: {fileID: 394087565}
+  m_RightClickAction: {fileID: 1370032648}
+  m_ScrollWheelAction: {fileID: 1550883692}
+  m_TrackedDevicePositionAction: {fileID: 1860302739}
+  m_TrackedDeviceOrientationAction: {fileID: 1331773054}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &572911142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572911140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &572911143
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572911140}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &775037633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/Cancel
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 15cef263-9014-4fd5-94d9-4e4a6234a6ef
+--- !u!114 &928158789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/Submit
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 7607c7b6-cd76-4816-beef-bd0341cfe950
+--- !u!114 &938352450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/Point
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 32b35790-4ed0-4e9a-aa41-69ac6d629449
 --- !u!1 &1073391057
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,6 +831,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29901c98001c7f946989651174113da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerCombat
+--- !u!114 &1109068952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3381858284181529889, guid: 6977fb40a107e6345980aa525c6eebef, type: 3}
+  m_PrefabInstance: {fileID: 1109068949}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92abb9c0225b5e441bfc505e8cf46cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerFlask
 --- !u!1001 &1174884816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -678,6 +850,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2033825970627815520, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1109068951}
+    - target: {fileID: 2033825970627815520, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: progression
+      value: 
+      objectReference: {fileID: 96572422}
     - target: {fileID: 2594109807276186341, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -763,9 +943,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 96572420}
     - target: {fileID: 3202774937709031295, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: flask
+      value: 
+      objectReference: {fileID: 1109068952}
+    - target: {fileID: 3202774937709031295, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1109068951}
+    - target: {fileID: 3202774937709031295, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: progression
+      value: 
+      objectReference: {fileID: 96572422}
     - target: {fileID: 6646250277224710327, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
       propertyPath: m_Name
       value: Hud
@@ -779,6 +967,90 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+--- !u!114 &1245101830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/Navigate
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: c95b2375-e6d9-4b88-9c4c-c5e76515df4b
+--- !u!114 &1331773054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/TrackedDeviceOrientation
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 9caa3d8a-6b2f-4e8e-8bad-6ede561bd9be
+--- !u!114 &1370032648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/RightClick
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 44b200b1-1557-4083-816c-b22cbdf77ddf
+--- !u!114 &1550883692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/ScrollWheel
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 0489e84a-4833-4c40-bfae-cea84b696689
+--- !u!114 &1860302739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/TrackedDevicePosition
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 24908448-c609-4bc3-a128-ea258674378a
+--- !u!114 &1983999134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: UI/Click
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_ActionId: 3c7022bf-7922-4f7c-a998-c437916075ad
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -789,3 +1061,4 @@ SceneRoots:
   - {fileID: 222642637}
   - {fileID: 96572421}
   - {fileID: 1174884816}
+  - {fileID: 572911143}

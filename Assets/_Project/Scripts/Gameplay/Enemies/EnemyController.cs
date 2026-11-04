@@ -45,6 +45,7 @@ namespace Ashbound.Gameplay.Enemies
         private ObjectPool<Projectile> projectiles;
         private EnemyState shownState;
         private int damage;
+        private int embers;
         private float knockbackVelocity;
         private float fallVelocity;
         private float flashTimer;
@@ -55,6 +56,9 @@ namespace Ashbound.Gameplay.Enemies
 
         public int CurrentHealth => health.Current;
 
+        /// <summary>Raised on the killing hit, with the spot and the Embers this enemy drops.</summary>
+        public event System.Action<Vector2, int> Killed;
+
         /// <summary>Prepares a spawned enemy: who it hunts, where it stays and how strong it is.</summary>
         public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale, SeededRandom patrolRandom)
         {
@@ -64,6 +68,7 @@ namespace Ashbound.Gameplay.Enemies
             maxX = roomMaxX;
             health = new Health(Mathf.RoundToInt(definition.MaxHealth * statScale));
             damage = Mathf.RoundToInt(definition.Damage * statScale);
+            embers = Mathf.RoundToInt(definition.Embers * statScale);
         }
 
         public bool TakeHit(in HitInfo hit)
@@ -81,6 +86,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
+                Killed?.Invoke(transform.position, embers);
                 StartCoroutine(RemoveCorpse());
             }
             else
@@ -97,6 +103,7 @@ namespace Ashbound.Gameplay.Enemies
             brain = new EnemyBrain(definition.ToBrainSettings());
             health = new Health(definition.MaxHealth);
             damage = definition.Damage;
+            embers = definition.Embers;
             shownState = EnemyState.Patrol;
 
             if (definition.Projectile != null)

@@ -1,7 +1,7 @@
 {
     "name": "Ashbound.Editor",
     "rootNamespace": "Ashbound.Editor",
-    "references": [],
+    "references": ["Ashbound.Gameplay"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -11,7 +11,7 @@ namespace Ashbound.Logic.Combat
             Current = max;
         }
 
-        public int Max { get; }
+        public int Max { get; private set; }
 
         public int Current { get; private set; }
 
@@ -24,6 +24,13 @@ namespace Ashbound.Logic.Combat
             {
                 Current = Math.Min(Max, Current + amount);
             }
+        }
+
+        /// <summary>Adds to the maximum and to the current hit points.</summary>
+        public void RaiseMax(int amount)
+        {
+            Max += amount;
+            Current += amount;
         }
 
         /// <summary>Removes hit points and reports whether this hit was the killing one.</summary>

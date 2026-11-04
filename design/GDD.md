@@ -27,7 +27,7 @@ Desktop browsers, keyboard and mouse or gamepad. Runs of 10 to 20 minutes.
 | Enemies | Telegraphed attacks, simple states | Idea |
 | Level assembly | Rooms joined by a seeded graph | Idea |
 | Loot | Weapons and skills found during a run | Idea |
-| Meta progression | Unlocks kept after death | Idea |
+| Meta progression | Embers spent at altars on permanent unlocks | Built |
 
 ## 6. Content plan
 | | First playable | Release |
@@ -38,7 +38,8 @@ Desktop browsers, keyboard and mouse or gamepad. Runs of 10 to 20 minutes.
 | Bosses | 0 | To be decided |
 
 ## 7. Signature
-To be defined in the M0 proposal.
+Heat. Landing hits without being hit builds three levels, which raise damage and the Embers enemies
+drop. Taking damage puts it out.
 
 ## 8. Out of scope
 See `BACKLOG.md`.

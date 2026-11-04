@@ -42,6 +42,8 @@ namespace Ashbound.Gameplay.Enemies
 
         public string DisplayName => definition.DisplayName;
 
+        public int Embers => definition.Embers;
+
         public int CurrentHealth => health.Current;
 
         public int MaxHealth => health.Max;
