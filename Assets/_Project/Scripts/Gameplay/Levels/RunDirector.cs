@@ -69,6 +69,10 @@ namespace Ashbound.Gameplay.Levels
 
             Room last = PlaceAfter(exitRoom, previous);
             last.GetComponentInChildren<ExitGate>().Reached += OnExitReached;
+
+            // Rooms were moved after they were created. Without this, the first physics step
+            // still sees their colliders at the origin and everything starts falling.
+            UnityEngine.Physics2D.SyncTransforms();
         }
 
         private Room PlaceAfter(Room prefab, Room previous)
