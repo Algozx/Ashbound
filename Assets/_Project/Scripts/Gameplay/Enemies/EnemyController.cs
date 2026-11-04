@@ -4,16 +4,18 @@ using Ashbound.Gameplay.Physics;
 using Ashbound.Logic.Combat;
 using Ashbound.Logic.Enemies;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Ashbound.Gameplay.Enemies
 {
-    /// <summary>Binds <see cref="EnemyBrain"/> to a body, an animator and a hitbox.</summary>
+    /// <summary>Binds <see cref="EnemyBrain"/> to a body, an animator and its attacks.</summary>
     [RequireComponent(typeof(KinematicMover))]
     public sealed class EnemyController : MonoBehaviour, IDamageable
     {
         private const float HitFlashTime = 0.1f;
         private const float LookAhead = 0.1f;
         private const float LedgeProbeDepth = 0.6f;
+        private const float TargetChestHeight = 1f;
 
         private static readonly int WalkState = Animator.StringToHash("Walk");
         private static readonly int IdleState = Animator.StringToHash("Idle");
@@ -26,6 +28,7 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private Animator animator;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Hitbox hitbox;
+        [SerializeField] private AttackAnimationEvents animationEvents;
         [SerializeField] private Collider2D bodyCollider;
         [SerializeField] private Color telegraphColor = new Color(1f, 0.75f, 0.35f);
         [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f);
@@ -34,19 +37,27 @@ namespace Ashbound.Gameplay.Enemies
         private KinematicMover mover;
         private EnemyBrain brain;
         private Health health;
+        private ObjectPool<Projectile> projectiles;
         private EnemyState shownState;
+        private int damage;
         private float knockbackVelocity;
         private float fallVelocity;
         private float flashTimer;
+        private float minX = float.NegativeInfinity;
+        private float maxX = float.PositiveInfinity;
 
         public EnemyState State => brain.State;
 
         public int CurrentHealth => health.Current;
 
-        /// <summary>Sets who this enemy hunts. Rooms call it when they spawn the enemy.</summary>
-        public void SetTarget(Transform newTarget)
+        /// <summary>Prepares a spawned enemy: who it hunts, where it stays and how strong it is.</summary>
+        public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale)
         {
             target = newTarget;
+            minX = roomMinX;
+            maxX = roomMaxX;
+            health = new Health(Mathf.RoundToInt(definition.MaxHealth * statScale));
+            damage = Mathf.RoundToInt(definition.Damage * statScale);
         }
 
         public bool TakeHit(in HitInfo hit)
@@ -64,7 +75,6 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
-                bodyCollider.enabled = false;
                 StartCoroutine(RemoveCorpse());
             }
             else
@@ -80,7 +90,26 @@ namespace Ashbound.Gameplay.Enemies
             mover = GetComponent<KinematicMover>();
             brain = new EnemyBrain(definition.ToBrainSettings());
             health = new Health(definition.MaxHealth);
+            damage = definition.Damage;
             shownState = EnemyState.Patrol;
+
+            if (definition.Projectile != null)
+            {
+                projectiles = new ObjectPool<Projectile>(
+                    () => Instantiate(definition.Projectile, transform.parent),
+                    shot => shot.gameObject.SetActive(true),
+                    shot => shot.gameObject.SetActive(false));
+            }
+        }
+
+        private void OnEnable()
+        {
+            animationEvents.ProjectileRequested += FireProjectile;
+        }
+
+        private void OnDisable()
+        {
+            animationEvents.ProjectileRequested -= FireProjectile;
         }
 
         private void FixedUpdate()
@@ -97,11 +126,20 @@ namespace Ashbound.Gameplay.Enemies
                 DeltaTime = dt,
             });
 
-            fallVelocity = mover.Grounded ? 0f : fallVelocity - definition.Gravity * dt;
             knockbackVelocity = Mathf.MoveTowards(knockbackVelocity, 0f, definition.KnockbackDecay * dt);
+            mover.Move(new Vector2(brain.MoveX * definition.MoveSpeed + knockbackVelocity, VerticalVelocity(dt)), dt);
+        }
 
-            var velocity = new Vector2(brain.MoveX * definition.MoveSpeed + knockbackVelocity, fallVelocity);
-            mover.Move(velocity, dt);
+        private float VerticalVelocity(float dt)
+        {
+            bool stillFlying = definition.Flies && brain.State != EnemyState.Dead;
+            if (stillFlying)
+            {
+                return brain.MoveY * definition.MoveSpeed;
+            }
+
+            fallVelocity = mover.Grounded ? 0f : fallVelocity - definition.Gravity * dt;
+            return fallVelocity;
         }
 
         private void LateUpdate()
@@ -136,7 +174,7 @@ namespace Ashbound.Gameplay.Enemies
 
             if (state == EnemyState.Telegraph)
             {
-                hitbox.Configure(new HitInfo { Damage = definition.Damage, Knockback = definition.Knockback }, brain.Facing);
+                hitbox.Configure(new HitInfo { Damage = damage, Knockback = definition.Knockback }, brain.Facing);
             }
             else
             {
@@ -165,12 +203,32 @@ namespace Ashbound.Gameplay.Enemies
             }
         }
 
+        private void FireProjectile()
+        {
+            Vector2 offset = definition.MuzzleOffset;
+            var muzzle = (Vector2)transform.position + new Vector2(offset.x * brain.Facing, offset.y);
+            Vector2 aim = (Vector2)target.position + Vector2.up * TargetChestHeight;
+            var hit = new HitInfo { Damage = damage, Knockback = definition.Knockback };
+            projectiles.Get().Launch(muzzle, aim - muzzle, hit, projectiles.Release);
+        }
+
         private bool IsBlockedAhead()
         {
+            float x = transform.position.x;
+            if ((brain.Facing > 0 && x >= maxX) || (brain.Facing < 0 && x <= minX))
+            {
+                return true;
+            }
+
             var direction = new Vector2(brain.Facing, 0f);
             if (mover.IsBlocked(direction, LookAhead))
             {
                 return true;
+            }
+
+            if (definition.Flies)
+            {
+                return false;
             }
 
             Bounds bounds = bodyCollider.bounds;

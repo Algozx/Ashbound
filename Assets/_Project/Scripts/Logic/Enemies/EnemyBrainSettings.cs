@@ -11,5 +11,16 @@ namespace Ashbound.Logic.Enemies
         public float StrikeTime;
         public float RecoverTime;
         public float HurtTime;
+
+        /// <summary>Largest height difference at which the attack starts.</summary>
+        public float AttackHeight;
+
+        /// <summary>Forward movement during the strike, as a share of the enemy's speed.</summary>
+        public float StrikeMoveScale;
+
+        public bool Flies;
+
+        /// <summary>How far above the target a flying enemy stays.</summary>
+        public float HoverHeight;
     }
 }

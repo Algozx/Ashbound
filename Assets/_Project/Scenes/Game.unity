@@ -157,9 +157,14 @@ MonoBehaviour:
   - {fileID: 6576705282341265171, guid: 43d8d77a737e7c342aade6342c0c6ef0, type: 3}
   enemyPool:
   - {fileID: 1956810008456885546, guid: 4d521eb251ba453499b04c500e463628, type: 3}
+  - {fileID: 7618090887002180766, guid: bc4d304367078c142b1d955b57741050, type: 3}
+  - {fileID: 6204778707565411512, guid: 15ecde10c7c4aa94b9d14a810c577baa, type: 3}
+  - {fileID: 8207147374973633234, guid: 1259d59b0a16e4040913e4b41ba32fb4, type: 3}
   player: {fileID: 1109068951}
   roomsPerRun: 3
-  spawnChance: 0.75
+  statStepPerRoom: 0.3
+  baseSpawnChance: 0.6
+  spawnChanceStep: 0.2
   fixedSeed: 0
   restartDelay: 2
 --- !u!4 &96572421

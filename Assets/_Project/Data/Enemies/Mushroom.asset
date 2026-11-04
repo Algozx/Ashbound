@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa46af34aceeccc4d9a1e6c822d57a14, type: 3}
+  m_Name: Mushroom
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyDefinition
+  maxHealth: 80
+  damage: 14
+  knockback: 5
+  moveSpeed: 1.6
+  patrolSpeedScale: 0.5
+  gravity: 40
+  knockbackDecay: 30
+  flies: 0
+  hoverHeight: 1
+  aggroRange: 12
+  aggroHeight: 3
+  attackRange: 8
+  attackHeight: 2.5
+  telegraphTime: 0.6
+  strikeTime: 0.2
+  strikeMoveScale: 0
+  recoverTime: 1.1
+  hurtTime: 0.3
+  projectile: {fileID: 2290480129321445259, guid: 9ae3242657d84464dac2997e862b06b6, type: 3}
+  muzzleOffset: {x: 0.9, y: 1.1}

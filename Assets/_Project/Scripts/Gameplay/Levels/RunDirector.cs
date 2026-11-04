@@ -14,6 +14,7 @@ namespace Ashbound.Gameplay.Levels
     {
         private const ulong RoomStream = 1;
         private const ulong SpawnStream = 2;
+        private const float RoomMargin = 2.5f;
 
         [SerializeField] private Room startRoom;
         [SerializeField] private Room exitRoom;
@@ -21,7 +22,13 @@ namespace Ashbound.Gameplay.Levels
         [SerializeField] private EnemyController[] enemyPool;
         [SerializeField] private PlayerCombat player;
         [SerializeField] private int roomsPerRun = 3;
-        [SerializeField, Range(0f, 1f)] private float spawnChance = 0.75f;
+        [Header("Difficulty")]
+        [Tooltip("Extra enemy health and damage per room, as a share of the base value.")]
+        [SerializeField] private float statStepPerRoom = 0.3f;
+        [SerializeField, Range(0f, 1f)] private float baseSpawnChance = 0.6f;
+        [SerializeField, Range(0f, 1f)] private float spawnChanceStep = 0.2f;
+
+        [Header("Seed")]
         [Tooltip("Plays a specific run. Zero picks a new seed every run.")]
         [SerializeField] private long fixedSeed;
         [SerializeField] private float restartDelay = 2f;
@@ -61,10 +68,12 @@ namespace Ashbound.Gameplay.Levels
             previous.PlaceEntryAt(Vector3.zero);
             player.transform.position = previous.PlayerStart.position;
 
-            foreach (int index in RoomChain.Build(roomRandom, roomPool.Length, roomsPerRun))
+            var difficulty = new DifficultyCurve(statStepPerRoom, baseSpawnChance, spawnChanceStep);
+            int[] chain = RoomChain.Build(roomRandom, roomPool.Length, roomsPerRun);
+            for (int depth = 0; depth < chain.Length; depth++)
             {
-                previous = PlaceAfter(roomPool[index], previous);
-                SpawnEnemies(previous, spawnRandom);
+                previous = PlaceAfter(roomPool[chain[depth]], previous);
+                SpawnEnemies(previous, spawnRandom, difficulty, depth);
             }
 
             Room last = PlaceAfter(exitRoom, previous);
@@ -82,16 +91,16 @@ namespace Ashbound.Gameplay.Levels
             return room;
         }
 
-        private void SpawnEnemies(Room room, SeededRandom random)
+        private void SpawnEnemies(Room room, SeededRandom random, DifficultyCurve difficulty, int depth)
         {
-            bool[] used = RoomChain.PickSpawns(random, room.EnemySpawns.Length, spawnChance);
+            bool[] used = RoomChain.PickSpawns(random, room.EnemySpawns.Length, difficulty.SpawnChance(depth));
             for (int i = 0; i < used.Length; i++)
             {
                 if (used[i])
                 {
                     EnemyController prefab = enemyPool[random.NextInt(0, enemyPool.Length)];
                     EnemyController enemy = Instantiate(prefab, room.EnemySpawns[i].position, Quaternion.identity, room.transform);
-                    enemy.SetTarget(player.transform);
+                    enemy.Configure(player.transform, room.Entry.position.x + RoomMargin, room.Exit.position.x - RoomMargin, difficulty.StatScale(depth));
                 }
             }
         }

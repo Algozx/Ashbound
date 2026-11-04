@@ -18,6 +18,7 @@ namespace Ashbound.Tests
                 AggroRange = 8f,
                 AggroHeight = 3f,
                 AttackRange = 2f,
+                AttackHeight = 2f,
                 TelegraphTime = 0.5f,
                 StrikeTime = 0.2f,
                 RecoverTime = 0.6f,

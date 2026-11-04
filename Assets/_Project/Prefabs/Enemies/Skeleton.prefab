@@ -225,6 +225,7 @@ MonoBehaviour:
   animator: {fileID: 6095040309534488630}
   spriteRenderer: {fileID: 9004798814520844976}
   hitbox: {fileID: 2583385868773218590}
+  animationEvents: {fileID: 1876666607171348869}
   bodyCollider: {fileID: 7461887849481902522}
   telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
   hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}

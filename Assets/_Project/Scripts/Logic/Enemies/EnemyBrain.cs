@@ -3,8 +3,8 @@ using System;
 namespace Ashbound.Logic.Enemies
 {
     /// <summary>
-    /// Decides what a melee enemy does. An attack is always announced by a telegraph, and once it
-    /// has started a hit does not interrupt it, so the player cannot lock an enemy in place.
+    /// Decides what an enemy does. An attack is always announced by a telegraph, and once it has
+    /// started a hit does not interrupt it, so the player cannot lock an enemy in place.
     /// </summary>
     public sealed class EnemyBrain
     {
@@ -25,6 +25,9 @@ namespace Ashbound.Logic.Enemies
         /// <summary>Desired movement from -1 to 1, as a share of the enemy's speed.</summary>
         public float MoveX { get; private set; }
 
+        /// <summary>Desired vertical movement of a flying enemy, as a share of its speed.</summary>
+        public float MoveY { get; private set; }
+
         public void Tick(in EnemySenses senses)
         {
             timer = Math.Max(0f, timer - senses.DeltaTime);
@@ -38,7 +41,7 @@ namespace Ashbound.Logic.Enemies
                     TickChase(senses);
                     break;
                 case EnemyState.Telegraph:
-                    MoveX = 0f;
+                    Stop();
                     if (timer <= 0f)
                     {
                         Enter(EnemyState.Strike, settings.StrikeTime);
@@ -46,7 +49,8 @@ namespace Ashbound.Logic.Enemies
 
                     break;
                 case EnemyState.Strike:
-                    MoveX = 0f;
+                    MoveX = senses.BlockedAhead ? 0f : Facing * settings.StrikeMoveScale;
+                    MoveY = 0f;
                     if (timer <= 0f)
                     {
                         Enter(EnemyState.Recover, settings.RecoverTime);
@@ -55,7 +59,7 @@ namespace Ashbound.Logic.Enemies
                     break;
                 case EnemyState.Recover:
                 case EnemyState.Hurt:
-                    MoveX = 0f;
+                    Stop();
                     if (timer <= 0f)
                     {
                         State = EnemyState.Chase;
@@ -63,7 +67,7 @@ namespace Ashbound.Logic.Enemies
 
                     break;
                 default:
-                    MoveX = 0f;
+                    Stop();
                     break;
             }
         }
@@ -82,7 +86,7 @@ namespace Ashbound.Logic.Enemies
         public void OnKilled()
         {
             State = EnemyState.Dead;
-            MoveX = 0f;
+            Stop();
         }
 
         private void TickPatrol(in EnemySenses senses)
@@ -99,6 +103,7 @@ namespace Ashbound.Logic.Enemies
             }
 
             MoveX = Facing * settings.PatrolSpeedScale;
+            MoveY = 0f;
         }
 
         private void TickChase(in EnemySenses senses)
@@ -110,20 +115,29 @@ namespace Ashbound.Logic.Enemies
             }
 
             Facing = senses.ToTargetX >= 0f ? 1 : -1;
+            float heightGap = senses.ToTargetY + (settings.Flies ? settings.HoverHeight : 0f);
 
-            if (Math.Abs(senses.ToTargetX) <= settings.AttackRange)
+            if (Math.Abs(senses.ToTargetX) <= settings.AttackRange && Math.Abs(heightGap) <= settings.AttackHeight)
             {
                 Enter(EnemyState.Telegraph, settings.TelegraphTime);
-                MoveX = 0f;
+                Stop();
                 return;
             }
 
-            MoveX = senses.BlockedAhead ? 0f : Facing;
+            bool closeEnough = Math.Abs(senses.ToTargetX) <= settings.AttackRange;
+            MoveX = senses.BlockedAhead || closeEnough ? 0f : Facing;
+            MoveY = settings.Flies ? Math.Clamp(heightGap, -1f, 1f) : 0f;
         }
 
         private bool Sees(in EnemySenses senses, float range)
         {
             return Math.Abs(senses.ToTargetX) <= range && Math.Abs(senses.ToTargetY) <= settings.AggroHeight;
+        }
+
+        private void Stop()
+        {
+            MoveX = 0f;
+            MoveY = 0f;
         }
 
         private void Enter(EnemyState state, float duration)

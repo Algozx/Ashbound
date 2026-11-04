@@ -92,6 +92,15 @@ that face the direction of travel.
 colliders at the origin. Enemies then fell a few pixels into contact with the floor, and sideways
 casts treated the floor as a wall, which left them standing still.
 
+## 2026-11-04: M1 scope
+**Decision:** M1 builds challenge first: new enemies and difficulty, loot, a boss, meta progression,
+then the real visuals. The goblin is fast, the mushroom is slow and shoots, the flying eye attacks from
+the air, and the Bringer of Death is the boss. Enemies get stronger room by room and stay in their
+room. The signature mechanic is now chosen in the middle of M1, with loot and enemy variety in play.
+**Alternatives considered:** Visuals first.
+**Why:** The M0 playtest was fun but lacked challenge, and decorated rooms could need rework when
+combat changes.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

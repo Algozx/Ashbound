@@ -419,13 +419,12 @@ MonoBehaviour:
   attackAction: {fileID: -8360104705758736140, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   hitbox: {fileID: 441990901335554244}
   feedback: {fileID: 2471775014140377627}
-  maxHealth: 50
+  maxHealth: 100
   hurtStun: 0.3
   hurtInvulnerability: 1
   hurtLift: 5
   hurtStop: 0.1
   hurtShake: 0.5
-  restartDelay: 1.6
   attackBufferTime: 0.15
 --- !u!61 &4806302614137191740
 BoxCollider2D:
