@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 2471775014140377627}
   - component: {fileID: 8673360601889834493}
   - component: {fileID: 4806302614137191740}
+  - component: {fileID: 3381858284181529889}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -479,6 +480,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.9, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &3381858284181529889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92abb9c0225b5e441bfc505e8cf46cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerFlask
+  useAction: {fileID: 6590191039323128469, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  healAmount: 40
 --- !u!1 &6961613374802940793
 GameObject:
   m_ObjectHideFlags: 0

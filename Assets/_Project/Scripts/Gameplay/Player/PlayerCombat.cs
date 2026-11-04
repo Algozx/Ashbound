@@ -29,11 +29,12 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private float attackBufferTime = 0.2f;
 
         private PlayerController controller;
+        private PlayerFlask flask;
         private AttackCombo combo;
         private Health health;
         private float[] stepDurations;
         private AttackStep currentStep;
-        private WeaponPickup nearbyPickup;
+        private Interactable nearby;
 
         public int CurrentHealth => health.Current;
 
@@ -44,8 +45,8 @@ namespace Ashbound.Gameplay.Player
         /// <summary>Raised when the equipped weapon changes.</summary>
         public event Action<WeaponDefinition> WeaponChanged;
 
-        /// <summary>Raised with the pickup in reach, or null when there is none.</summary>
-        public event Action<WeaponPickup> NearbyPickupChanged;
+        /// <summary>Raised with what the interact button would use, or null when there is nothing.</summary>
+        public event Action<Interactable> NearbyInteractableChanged;
 
         /// <summary>Raised with current and maximum health after a hit.</summary>
         public event Action<int, int> HealthChanged;
@@ -66,11 +67,26 @@ namespace Ashbound.Gameplay.Player
             HealthChanged?.Invoke(health.Current, health.Max);
         }
 
-        /// <summary>Tells the player which weapon on the ground the interact button would take.</summary>
-        public void SetNearbyPickup(WeaponPickup pickup)
+        /// <summary>Adds to the maximum health, and heals by the same amount.</summary>
+        public void RaiseMaxHealth(int amount)
         {
-            nearbyPickup = pickup;
-            NearbyPickupChanged?.Invoke(pickup);
+            health.RaiseMax(amount);
+            HealthChanged?.Invoke(health.Current, health.Max);
+        }
+
+        /// <summary>Tells the player what the interact button would use.</summary>
+        public void SetNearbyInteractable(Interactable interactable)
+        {
+            nearby = interactable;
+            NearbyInteractableChanged?.Invoke(interactable);
+        }
+
+        /// <summary>Stops or restarts reading the player's input, for menus.</summary>
+        public void SetInputEnabled(bool inputEnabled)
+        {
+            enabled = inputEnabled;
+            controller.enabled = inputEnabled;
+            flask.enabled = inputEnabled;
         }
 
         public bool TakeHit(in HitInfo hit)
@@ -99,6 +115,7 @@ namespace Ashbound.Gameplay.Player
         private void Awake()
         {
             controller = GetComponent<PlayerController>();
+            flask = GetComponent<PlayerFlask>();
             health = new Health(maxHealth);
             UseWeapon(weapon);
         }
@@ -129,9 +146,9 @@ namespace Ashbound.Gameplay.Player
                 combo.Press();
             }
 
-            if (nearbyPickup != null && !health.IsDead && interactAction.action.WasPressedThisFrame())
+            if (nearby != null && !health.IsDead && interactAction.action.WasPressedThisFrame())
             {
-                nearbyPickup.Take(this);
+                nearby.Interact(this);
             }
 
             if (controller.IsDashing && combo.IsActive)

@@ -12,6 +12,8 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private int maxHealth = 40;
         [SerializeField] private int damage = 10;
         [SerializeField] private float knockback = 7f;
+        [Tooltip("Embers dropped in the first room. Later rooms scale it like health and damage.")]
+        [SerializeField] private int embers = 4;
 
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 3.5f;
@@ -54,6 +56,8 @@ namespace Ashbound.Gameplay.Enemies
         public int Damage => damage;
 
         public float Knockback => knockback;
+
+        public int Embers => embers;
 
         public float MoveSpeed => moveSpeed;
 

@@ -9,6 +9,7 @@ namespace Ashbound.Gameplay.Enemies
     {
         [Header("Stats")]
         [SerializeField] private string displayName = "Boss";
+        [SerializeField] private int embers = 50;
         [SerializeField] private int maxHealth = 400;
         [SerializeField] private int meleeDamage = 22;
         [SerializeField] private int spellDamage = 18;
@@ -35,6 +36,8 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private float spellSpacing = 3.5f;
 
         public string DisplayName => displayName;
+
+        public int Embers => embers;
 
         public int MaxHealth => maxHealth;
 

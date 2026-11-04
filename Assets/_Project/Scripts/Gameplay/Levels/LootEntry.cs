@@ -1,4 +1,5 @@
 using System;
+using Ashbound.Gameplay.Meta;
 using UnityEngine;
 
 namespace Ashbound.Gameplay.Levels
@@ -9,9 +10,13 @@ namespace Ashbound.Gameplay.Levels
     {
         [SerializeField] private GameObject prefab;
         [SerializeField] private int weight = 1;
+        [Tooltip("Leave empty for loot that is always available.")]
+        [SerializeField] private UnlockDefinition requiredUnlock;
 
         public GameObject Prefab => prefab;
 
         public int Weight => weight;
+
+        public UnlockDefinition RequiredUnlock => requiredUnlock;
     }
 }

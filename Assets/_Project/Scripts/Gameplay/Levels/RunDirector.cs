@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Ashbound.Gameplay.Enemies;
+using Ashbound.Gameplay.Meta;
 using Ashbound.Gameplay.Player;
 using Ashbound.Logic;
 using Ashbound.Logic.Levels;
@@ -22,6 +23,7 @@ namespace Ashbound.Gameplay.Levels
         [SerializeField] private Room[] roomPool;
         [SerializeField] private EnemyController[] enemyPool;
         [SerializeField] private PlayerCombat player;
+        [SerializeField] private Progression progression;
         [SerializeField] private int roomsPerRun = 3;
         [SerializeField] private LootEntry[] loot;
         [Header("Difficulty")]
@@ -72,6 +74,7 @@ namespace Ashbound.Gameplay.Levels
 
             Room previous = Instantiate(startRoom, transform);
             previous.PlaceEntryAt(Vector3.zero);
+            BindAltars(previous);
             player.transform.position = previous.PlayerStart.position;
 
             var difficulty = new DifficultyCurve(statStepPerRoom, baseSpawnChance, spawnChanceStep);
@@ -87,6 +90,7 @@ namespace Ashbound.Gameplay.Levels
             last.GetComponentInChildren<ExitGate>(true).Reached += OnExitReached;
             Arena = last.GetComponent<BossArena>();
             Arena.Prepare(player.transform);
+            Arena.Boss.Defeated += OnBossDefeated;
 
             // Rooms were moved after they were created. Without this, the first physics step
             // still sees their colliders at the origin and everything starts falling.
@@ -97,7 +101,16 @@ namespace Ashbound.Gameplay.Levels
         {
             Room room = Instantiate(prefab, transform);
             room.PlaceEntryAt(previous.Exit.position);
+            BindAltars(room);
             return room;
+        }
+
+        private void BindAltars(Room room)
+        {
+            foreach (Altar altar in room.GetComponentsInChildren<Altar>())
+            {
+                altar.Bind(progression);
+            }
         }
 
         private void SpawnEnemies(Room room, SeededRandom random, DifficultyCurve difficulty, int depth)
@@ -110,6 +123,7 @@ namespace Ashbound.Gameplay.Levels
                     EnemyController prefab = enemyPool[random.NextInt(0, enemyPool.Length)];
                     EnemyController enemy = Instantiate(prefab, room.EnemySpawns[i].position, Quaternion.identity, room.transform);
                     enemy.Configure(player.transform, room.Entry.position.x + RoomMargin, room.Exit.position.x - RoomMargin, difficulty.StatScale(depth), random.Fork((ulong)i + 1));
+                    enemy.Killed += progression.DropEmbers;
                 }
             }
         }
@@ -119,21 +133,26 @@ namespace Ashbound.Gameplay.Levels
             var weights = new int[loot.Length];
             for (int i = 0; i < loot.Length; i++)
             {
-                weights[i] = loot[i].Weight;
+                weights[i] = progression.IsUnlocked(loot[i].RequiredUnlock) ? loot[i].Weight : 0;
             }
 
             GameObject prefab = loot[LootTable.Pick(random, weights)].Prefab;
             Instantiate(prefab, room.LootSpawn.position, Quaternion.identity, room.transform);
         }
 
+        private void OnBossDefeated()
+        {
+            progression.DropEmbers(Arena.Boss.transform.position, Arena.Boss.Embers);
+        }
+
         private void OnPlayerDied()
         {
-            EndRun("You died");
+            EndRun("You died\n" + progression.SettleDeath() + " Embers kept");
         }
 
         private void OnExitReached()
         {
-            EndRun("Run complete");
+            EndRun("Run complete\n" + progression.SettleVictory() + " Embers kept");
         }
 
         private void EndRun(string message)

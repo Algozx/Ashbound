@@ -18,6 +18,7 @@ Planned input, already mapped in the Input System:
 | Secondary attack | K or right mouse button | North button |
 | Skills | Q and E | Left and right triggers |
 | Interact | F | Right shoulder |
+| Healing flask, once unlocked | Q | Left trigger |
 | Pause | Escape or P | Start |
 
 ## About
