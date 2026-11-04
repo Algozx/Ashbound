@@ -74,6 +74,17 @@ jump while attacking, and heavy ones commit the player. The sword walks at 80% s
 **Consequences:** The skeleton imports at 24 pixels per unit, so its pixels are slightly smaller than
 the player's.
 
+## 2026-11-04: Character colliders have flat bottoms
+**Decision:** The player and enemies use box colliders instead of capsules.
+**Why:** A capsule's rounded bottom could rest on a platform corner, which counted as ground and held
+the player beside the ledge. A flat bottom either stands on the edge or falls past it.
+
+## 2026-11-04: Run structure for M0
+**Decision:** A run is a straight chain: a start room, three rooms picked by seed from a pool of four,
+and an exit room. Enemy spawns are also picked by seed. Death and the exit both start a new run with a
+new nine-digit seed, and the seed is shown on screen.
+**Consequences:** Branching paths come after M0. Rebuilding the scene keeps every run clean.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses
