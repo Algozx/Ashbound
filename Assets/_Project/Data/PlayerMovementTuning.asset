@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b933e382049489d45827b984067ca8ed, type: 3}
+  m_Name: PlayerMovementTuning
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerMovementTuning
+  runSpeed: 9
+  groundAcceleration: 90
+  airAcceleration: 55
+  jumpHeight: 4.5
+  timeToApex: 0.38
+  fallGravityMultiplier: 1.6
+  maxFallSpeed: 24
+  jumpCutMultiplier: 0.45
+  coyoteTime: 0.1
+  jumpBufferTime: 0.12
+  dashSpeed: 22
+  dashDuration: 0.18
+  dashCooldown: 0.55
+  dashInvulnerability: 0.22
