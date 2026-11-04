@@ -40,6 +40,9 @@ namespace Ashbound.Gameplay.Levels
         /// <summary>Seed of the current run.</summary>
         public ulong Seed { get; private set; }
 
+        /// <summary>The arena at the end of the run.</summary>
+        public BossArena Arena { get; private set; }
+
         /// <summary>Raised with a message when the run ends, before the restart.</summary>
         public event Action<string> RunEnded;
 
@@ -81,7 +84,9 @@ namespace Ashbound.Gameplay.Levels
             }
 
             Room last = PlaceAfter(exitRoom, previous);
-            last.GetComponentInChildren<ExitGate>().Reached += OnExitReached;
+            last.GetComponentInChildren<ExitGate>(true).Reached += OnExitReached;
+            Arena = last.GetComponent<BossArena>();
+            Arena.Prepare(player.transform);
 
             // Rooms were moved after they were created. Without this, the first physics step
             // still sees their colliders at the origin and everything starts falling.

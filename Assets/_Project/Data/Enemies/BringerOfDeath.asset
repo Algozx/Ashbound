@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb313858a5666e347be0c5abae616dae, type: 3}
+  m_Name: BringerOfDeath
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.BossDefinition
+  displayName: Bringer of Death
+  maxHealth: 400
+  meleeDamage: 22
+  spellDamage: 18
+  knockback: 9
+  moveSpeed: 2.5
+  meleeRange: 3.5
+  meleeWindup: 0.4
+  meleeStrike: 0.4
+  castWindup: 0.5
+  castRelease: 0.4
+  recover: 1
+  castInterval: 6
+  meleesBeforeCast: 2
+  enrageHealthShare: 0.5
+  enragedRecoverScale: 0.6
+  spellsPerCast: 1
+  enragedSpellsPerCast: 3
+  spellSpacing: 3.5
