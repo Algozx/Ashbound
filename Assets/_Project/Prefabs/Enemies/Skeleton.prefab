@@ -139,9 +139,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3006475591247934339}
   - component: {fileID: 9050606675359819038}
-  - component: {fileID: 5687123358042567162}
   - component: {fileID: 5905551907214328350}
   - component: {fileID: 1956810008456885546}
+  - component: {fileID: 7461887849481902522}
   m_Layer: 8
   m_Name: Skeleton
   m_TagString: Untagged
@@ -193,8 +193,44 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!70 &5687123358042567162
-CapsuleCollider2D:
+--- !u!114 &5905551907214328350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3974442386166619360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27c213890299bc24c901b760a2c2e9ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Physics.KinematicMover
+  solidLayers:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &1956810008456885546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3974442386166619360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49c813e9339fa074192fc0cd61cd88e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyController
+  definition: {fileID: 11400000, guid: 7073287037544b845b00dadeb239dcb0, type: 2}
+  target: {fileID: 0}
+  animator: {fileID: 6095040309534488630}
+  spriteRenderer: {fileID: 9004798814520844976}
+  hitbox: {fileID: 2583385868773218590}
+  bodyCollider: {fileID: 7461887849481902522}
+  telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
+  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  corpseTime: 1.2
+--- !u!61 &7461887849481902522
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -228,44 +264,17 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 1}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Size: {x: 0.9, y: 2}
-  m_Direction: 0
---- !u!114 &5905551907214328350
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3974442386166619360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c213890299bc24c901b760a2c2e9ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Physics.KinematicMover
-  solidLayers:
-    serializedVersion: 2
-    m_Bits: 64
---- !u!114 &1956810008456885546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3974442386166619360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49c813e9339fa074192fc0cd61cd88e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyController
-  definition: {fileID: 11400000, guid: 7073287037544b845b00dadeb239dcb0, type: 2}
-  target: {fileID: 0}
-  animator: {fileID: 6095040309534488630}
-  spriteRenderer: {fileID: 9004798814520844976}
-  hitbox: {fileID: 2583385868773218590}
-  bodyCollider: {fileID: 5687123358042567162}
-  telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
-  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
-  corpseTime: 1.2
+  m_EdgeRadius: 0
 --- !u!1 &7589082195723796440
 GameObject:
   m_ObjectHideFlags: 0

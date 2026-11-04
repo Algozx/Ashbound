@@ -43,6 +43,12 @@ namespace Ashbound.Gameplay.Enemies
 
         public int CurrentHealth => health.Current;
 
+        /// <summary>Sets who this enemy hunts. Rooms call it when they spawn the enemy.</summary>
+        public void SetTarget(Transform newTarget)
+        {
+            target = newTarget;
+        }
+
         public bool TakeHit(in HitInfo hit)
         {
             if (health.IsDead)

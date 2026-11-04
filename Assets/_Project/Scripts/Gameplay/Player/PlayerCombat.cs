@@ -1,9 +1,8 @@
-using System.Collections;
+using System;
 using Ashbound.Gameplay.Combat;
 using Ashbound.Logic.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace Ashbound.Gameplay.Player
 {
@@ -23,7 +22,6 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private float hurtLift = 5f;
         [SerializeField] private float hurtStop = 0.1f;
         [SerializeField] private float hurtShake = 0.5f;
-        [SerializeField] private float restartDelay = 1.6f;
 
         [Header("Input")]
         [SerializeField] private float attackBufferTime = 0.2f;
@@ -35,6 +33,14 @@ namespace Ashbound.Gameplay.Player
         private AttackStep currentStep;
 
         public int CurrentHealth => health.Current;
+
+        public int MaxHealth => health.Max;
+
+        /// <summary>Raised with current and maximum health after a hit.</summary>
+        public event Action<int, int> HealthChanged;
+
+        /// <summary>Raised once, on the killing hit.</summary>
+        public event Action Died;
 
         public bool TakeHit(in HitInfo hit)
         {
@@ -48,11 +54,12 @@ namespace Ashbound.Gameplay.Player
             float direction = transform.position.x >= hit.SourceX ? 1f : -1f;
             controller.Hurt(direction * hit.Knockback, hurtLift, hurtStun, hurtInvulnerability);
             feedback.PlayHurt(hurtStop, hurtShake);
+            HealthChanged?.Invoke(health.Current, health.Max);
 
             if (killed)
             {
                 controller.Die();
-                StartCoroutine(RestartAfterDeath());
+                Died?.Invoke();
             }
 
             return true;
@@ -124,12 +131,6 @@ namespace Ashbound.Gameplay.Player
         private void OnHitLanded()
         {
             feedback.PlayHit(currentStep.HitStop, currentStep.ShakeForce);
-        }
-
-        private IEnumerator RestartAfterDeath()
-        {
-            yield return new WaitForSeconds(restartDelay);
-            SceneManager.LoadScene(gameObject.scene.name);
         }
     }
 }
