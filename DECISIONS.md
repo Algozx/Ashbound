@@ -114,6 +114,13 @@ each). Potions work on touch and wait if health is full. Weapons are taken with 
 weapon stays on the ground, so a run is a choice between handling styles.
 **Consequences:** Loot sits on platforms and steps, so reaching it means leaving the fight's safe line.
 
+## 2026-11-04: Boss fight
+**Decision:** Every run ends in an arena with the Bringer of Death. Entering closes the door, and the
+exit appears after the boss dies. It walks to the player and swings, and it casts on a timer or after
+two swings in a row, so distance is not safe. Spells open a portal over the player and strike a moment
+later. At half health it recovers faster and casts three spells. Hits never stagger it.
+**Why:** A run needs a clear goal, and two attack types force both dodging and repositioning.
+
 ## 2026-11-04: Pixel scale
 **Decision:** Sprites import at 16 pixels per unit with point filtering, on a 320x180 reference view.
 **Why:** It matches 16-pixel tiles and scales cleanly to 1280x720. To be revisited if the art uses

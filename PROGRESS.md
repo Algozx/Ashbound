@@ -2,14 +2,14 @@
 
 Read `CHARTER.md` first. Updated at the end of every work session.
 
-Resume here (2026-11-04): M1.2 is built and waiting for a hands-on check. Next is M1.3, the boss.
+Resume here (2026-11-04): M1.3 is built and waiting for a hands-on check. Next is M1.4, meta progression.
 
 ## Current milestone: M1, challenge and the first biome
 Goal: each run demands attention and offers choices, with a clear objective at the end.
 
 - [x] M1.1 New enemies and difficulty
 - [x] M1.2 Weapons and healing found during a run
-- [ ] M1.3 Boss at the end of the run
+- [x] M1.3 Boss at the end of the run
 - [ ] M1.4 Currency and permanent unlocks
 - [ ] M1.5 Tileset, backgrounds and music
 
