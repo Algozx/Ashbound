@@ -14,6 +14,7 @@ namespace Ashbound.Logic.Movement
         private float dashTimer;
         private float dashCooldownTimer;
         private float invulnerabilityTimer;
+        private float stunTimer;
         private bool airDashUsed;
         private bool jumpRising;
 
@@ -31,6 +32,20 @@ namespace Ashbound.Logic.Movement
         public MotorState State { get; private set; } = MotorState.Idle;
 
         public bool IsInvulnerable => invulnerabilityTimer > 0f;
+
+        public bool IsDashing => dashTimer > 0f;
+
+        /// <summary>Stops control for a moment and pushes the player away from a hit.</summary>
+        public void Hurt(float knockbackX, float knockbackY, float stunTime, float invulnerability)
+        {
+            VelocityX = knockbackX;
+            VelocityY = knockbackY;
+            stunTimer = stunTime;
+            invulnerabilityTimer = Math.Max(invulnerabilityTimer, invulnerability);
+            dashTimer = 0f;
+            jumpRising = false;
+            State = MotorState.Hurt;
+        }
 
         /// <summary>Advances the motor by one physics step.</summary>
         public void Step(in MotorInput input)
@@ -59,6 +74,13 @@ namespace Ashbound.Logic.Movement
                 VelocityY = 0f;
             }
 
+            if (stunTimer > 0f)
+            {
+                ApplyGravity(input, dt);
+                State = MotorState.Hurt;
+                return;
+            }
+
             if (input.DashPressed && CanDash(input.Grounded))
             {
                 StartDash(input.Grounded);
@@ -85,6 +107,7 @@ namespace Ashbound.Logic.Movement
             dashTimer = Math.Max(0f, dashTimer - dt);
             dashCooldownTimer = Math.Max(0f, dashCooldownTimer - dt);
             invulnerabilityTimer = Math.Max(0f, invulnerabilityTimer - dt);
+            stunTimer = Math.Max(0f, stunTimer - dt);
         }
 
         private bool CanDash(bool grounded)
@@ -104,6 +127,11 @@ namespace Ashbound.Logic.Movement
         private void ApplyRun(in MotorInput input, float dt)
         {
             float target = Math.Clamp(input.MoveX, -1f, 1f) * settings.RunSpeed;
+            if (input.Attacking && input.Grounded)
+            {
+                target *= settings.AttackMoveScale;
+            }
+
             float acceleration = input.Grounded ? settings.GroundAcceleration : settings.AirAcceleration;
             float maxChange = acceleration * dt;
             float difference = target - VelocityX;
@@ -112,7 +140,7 @@ namespace Ashbound.Logic.Movement
 
         private void ApplyJump(in MotorInput input)
         {
-            if (jumpBufferTimer > 0f && coyoteTimer > 0f)
+            if (jumpBufferTimer > 0f && coyoteTimer > 0f && !input.Attacking)
             {
                 VelocityY = settings.JumpVelocity;
                 jumpBufferTimer = 0f;

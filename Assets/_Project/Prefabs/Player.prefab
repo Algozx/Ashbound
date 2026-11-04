@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6113986741671144457}
   - component: {fileID: 156439427648791308}
   - component: {fileID: 4390803915992012437}
+  - component: {fileID: 6490516717442862827}
   m_Layer: 7
   m_Name: Visual
   m_TagString: Untagged
@@ -115,6 +116,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6490516717442862827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754184319040402465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83842ff3281932d4587f7dc98765152f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.AttackAnimationEvents
+  hitbox: {fileID: 441990901335554244}
 --- !u!1 &6840722876222504080
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +141,11 @@ GameObject:
   - component: {fileID: 5661692715269123897}
   - component: {fileID: 4646813869568154344}
   - component: {fileID: 7801876223149612544}
+  - component: {fileID: 1614614326669187481}
+  - component: {fileID: 4660877478247271569}
+  - component: {fileID: 1593579340582297530}
+  - component: {fileID: 2471775014140377627}
+  - component: {fileID: 8673360601889834493}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -148,6 +167,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6113986741671144457}
+  - {fileID: 2447488747907413263}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &5661692715269123897
@@ -230,8 +250,265 @@ MonoBehaviour:
   moveAction: {fileID: -6584352526302219893, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   jumpAction: {fileID: -5610376680720103902, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   dashAction: {fileID: -2887688949599184863, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  animator: {fileID: 4390803915992012437}
+  spriteRenderer: {fileID: 156439427648791308}
+--- !u!114 &1614614326669187481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27c213890299bc24c901b760a2c2e9ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Physics.KinematicMover
   solidLayers:
     serializedVersion: 2
     m_Bits: 64
-  animator: {fileID: 4390803915992012437}
-  spriteRenderer: {fileID: 156439427648791308}
+--- !u!82 &4660877478247271569
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1593579340582297530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineImpulseSource
+  ImpulseDefinition:
+    ImpulseChannel: 1
+    ImpulseShape: 2
+    CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    ImpulseDuration: 0.2
+    ImpulseType: 0
+    DissipationRate: 0.25
+    RawSignal: {fileID: 0}
+    AmplitudeGain: 1
+    FrequencyGain: 1
+    RepeatMode: 0
+    Randomize: 1
+    TimeEnvelope:
+      AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      AttackTime: 0
+      SustainTime: 0.2
+      DecayTime: 0.7
+      ScaleWithImpact: 1
+      HoldForever: 0
+    ImpactRadius: 100
+    DirectionMode: 0
+    DissipationMode: 2
+    DissipationDistance: 100
+    PropagationSpeed: 343
+  DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &2471775014140377627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b309c86fee4b78840abaa863ddbf8c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.CombatFeedback
+  impulse: {fileID: 1593579340582297530}
+  audioSource: {fileID: 4660877478247271569}
+  swingSounds:
+  - {fileID: 8300000, guid: 4296e9b734f368543ba197faf4dec168, type: 3}
+  - {fileID: 8300000, guid: ab5ebcb0e5bc1df4fbbe379527616c85, type: 3}
+  - {fileID: 8300000, guid: 03453973cfbae694f85ea1d739c5d694, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: 702f165dc4237604aab4ef0f13c8786d, type: 3}
+  - {fileID: 8300000, guid: 17bd3c3679173bc40a487fafd76024aa, type: 3}
+  hurtSounds:
+  - {fileID: 8300000, guid: 17878607c192a78459c89339d63cb12f, type: 3}
+--- !u!114 &8673360601889834493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29901c98001c7f946989651174113da6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerCombat
+  attack: {fileID: 11400000, guid: b4294ee1bd1be6047bc7a3e4ee455ee4, type: 2}
+  attackAction: {fileID: -8360104705758736140, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  hitbox: {fileID: 441990901335554244}
+  feedback: {fileID: 2471775014140377627}
+  maxHealth: 50
+  hurtStun: 0.3
+  hurtInvulnerability: 1
+  hurtLift: 5
+  hurtStop: 0.1
+  hurtShake: 0.5
+  restartDelay: 1.6
+  attackBufferTime: 0.15
+--- !u!1 &6961613374802940793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2447488747907413263}
+  - component: {fileID: 441990901335554244}
+  m_Layer: 7
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2447488747907413263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6961613374802940793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1, y: 1.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6377418698454672650}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &441990901335554244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6961613374802940793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e622fe325ddfd447985f96391626444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.Hitbox
+  size: {x: 2.2, y: 1.8}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 256
