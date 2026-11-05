@@ -10,6 +10,7 @@ namespace Ashbound.Gameplay.Levels
     {
         [Tooltip("What lies ahead is harder and pays more.")]
         [SerializeField] private bool dangerous;
+        [SerializeField] private AudioSource audioSource;
 
         private Vector2 destination;
 
@@ -27,6 +28,7 @@ namespace Ashbound.Gameplay.Levels
         {
             Vector2 moved = destination - (Vector2)player.transform.position;
             player.GetComponent<PlayerController>().Teleport(destination);
+            audioSource.Play();
             Used?.Invoke(moved);
         }
     }

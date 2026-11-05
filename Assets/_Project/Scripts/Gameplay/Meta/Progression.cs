@@ -17,6 +17,9 @@ namespace Ashbound.Gameplay.Meta
         [SerializeField] private PlayerCombat player;
         [SerializeField] private PlayerFlask flask;
         [SerializeField] private EmberPickup emberPrefab;
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip[] emberSounds;
+        [SerializeField] private AudioClip buySound;
 
         private Profile profile;
         private EmberWallet wallet;
@@ -71,6 +74,7 @@ namespace Ashbound.Gameplay.Meta
             }
 
             ProfileStore.Save(profile);
+            audioSource.PlayOneShot(buySound);
             Apply(unlock, 1);
             EmbersChanged?.Invoke();
             return true;
@@ -146,6 +150,7 @@ namespace Ashbound.Gameplay.Meta
         private void OnEmberCollected(EmberPickup ember)
         {
             Wallet.Collect(ember.Value);
+            audioSource.PlayOneShot(emberSounds[UnityEngine.Random.Range(0, emberSounds.Length)]);
             embers.Release(ember);
             EmbersChanged?.Invoke();
         }

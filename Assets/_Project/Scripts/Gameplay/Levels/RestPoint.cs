@@ -8,6 +8,7 @@ namespace Ashbound.Gameplay.Levels
     public sealed class RestPoint : Interactable
     {
         [SerializeField] private GameObject flame;
+        [SerializeField] private AudioSource audioSource;
 
         private bool used;
 
@@ -22,6 +23,7 @@ namespace Ashbound.Gameplay.Levels
 
             used = true;
             flame.SetActive(false);
+            audioSource.Play();
             player.Heal(player.MaxHealth);
             player.GetComponent<PlayerFlask>().Refill();
             player.SetNearbyInteractable(this);

@@ -15,9 +15,12 @@ namespace Ashbound.Gameplay.Player
         [Tooltip("Extra Embers at each level, as a share.")]
         [SerializeField] private float[] emberBonus = { 0.25f, 0.5f, 0.75f };
         [SerializeField] private Color hottestTint = new Color(1f, 0.65f, 0.35f);
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip levelUpSound;
 
         private PlayerController controller;
         private Heat heat;
+        private int shownLevel;
 
         public int Level => heat.Level;
 
@@ -55,6 +58,12 @@ namespace Ashbound.Gameplay.Player
         private void OnLevelChanged(int level)
         {
             controller.Tint = Color.Lerp(Color.white, hottestTint, (float)level / heat.MaxLevel);
+            if (level > shownLevel)
+            {
+                audioSource.PlayOneShot(levelUpSound);
+            }
+
+            shownLevel = level;
             LevelChanged?.Invoke(level);
         }
     }
