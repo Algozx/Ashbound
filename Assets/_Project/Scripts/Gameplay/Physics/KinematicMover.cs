@@ -56,7 +56,7 @@ namespace Ashbound.Gameplay.Physics
         public void ProbeGround()
         {
             dropTimer = Mathf.Max(0f, dropTimer - Time.fixedDeltaTime);
-            groundGap = NearestSurface(Vector2.down, SkinWidth * 2f, out bool oneWay);
+            groundGap = NearestSurface(Vector2.down, SkinWidth * 2f, Vector2.zero, out bool oneWay);
             Grounded = groundGap <= SkinWidth * 2f;
             OnOneWayPlatform = Grounded && oneWay;
         }
@@ -64,14 +64,17 @@ namespace Ashbound.Gameplay.Physics
         /// <summary>True when a surface facing the body is within distance along direction.</summary>
         public bool IsBlocked(Vector2 direction, float distance)
         {
-            return NearestSurface(direction, distance, out _) <= distance;
+            return NearestSurface(direction, distance, Vector2.zero, out _) <= distance;
         }
 
         public void Move(Vector2 velocity, float deltaTime)
         {
             Vector2 delta = velocity * deltaTime;
-            float moveX = Sweep(Vector2.right * Mathf.Sign(delta.x), Mathf.Abs(delta.x));
-            float moveY = Sweep(Vector2.up * Mathf.Sign(delta.y), Mathf.Abs(delta.y));
+            float signedX = Sweep(Vector2.right * Mathf.Sign(delta.x), Mathf.Abs(delta.x), Vector2.zero) * Mathf.Sign(delta.x);
+
+            // The vertical sweep starts where the horizontal one ended. Sweeping both from the same
+            // spot lets a diagonal step cut through a corner and end up inside the level.
+            float moveY = Sweep(Vector2.up * Mathf.Sign(delta.y), Mathf.Abs(delta.y), new Vector2(signedX, 0f));
             HitCeiling = delta.y > 0f && moveY < delta.y;
 
             float signedY = moveY * Mathf.Sign(delta.y);
@@ -81,25 +84,27 @@ namespace Ashbound.Gameplay.Physics
                 signedY = SkinWidth - groundGap;
             }
 
-            body.MovePosition(body.position + new Vector2(moveX * Mathf.Sign(delta.x), signedY));
+            body.MovePosition(body.position + new Vector2(signedX, signedY));
         }
 
         // Distance the body can travel along direction before touching something solid.
-        private float Sweep(Vector2 direction, float distance)
+        private float Sweep(Vector2 direction, float distance, Vector2 offset)
         {
             if (distance <= 0f)
             {
                 return 0f;
             }
 
-            float nearest = NearestSurface(direction, distance + SkinWidth, out _);
+            float nearest = NearestSurface(direction, distance + SkinWidth, offset, out _);
             return Mathf.Min(distance, Mathf.Max(0f, nearest - SkinWidth));
         }
 
         // Only surfaces that face the movement count, so a floor never stops a sideways step.
-        private float NearestSurface(Vector2 direction, float distance, out bool oneWay)
+        private float NearestSurface(Vector2 direction, float distance, Vector2 offset, out bool oneWay)
         {
-            int count = body.Cast(direction, filter, hits, distance);
+            Bounds bounds = bodyCollider.bounds;
+            Vector2 origin = (Vector2)bounds.center + offset;
+            int count = UnityEngine.Physics2D.BoxCast(origin, bounds.size, 0f, direction, filter, hits, distance);
             float nearest = float.PositiveInfinity;
             oneWay = false;
 
