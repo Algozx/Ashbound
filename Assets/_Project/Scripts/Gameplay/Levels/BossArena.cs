@@ -7,6 +7,8 @@ namespace Ashbound.Gameplay.Levels
     /// <summary>Closes the door when the player walks in, and opens the exit when the boss dies.</summary>
     public sealed class BossArena : MonoBehaviour
     {
+        private const float ArenaHeight = 30f;
+
         [SerializeField] private BossController boss;
         [SerializeField] private Transform startLine;
         [SerializeField] private GameObject door;
@@ -38,7 +40,8 @@ namespace Ashbound.Gameplay.Levels
 
         private void FixedUpdate()
         {
-            if (!started && player != null && player.position.x >= startLine.position.x)
+            bool inArena = player != null && Mathf.Abs(player.position.y - startLine.position.y) <= ArenaHeight;
+            if (!started && inArena && player.position.x >= startLine.position.x)
             {
                 started = true;
                 door.SetActive(true);

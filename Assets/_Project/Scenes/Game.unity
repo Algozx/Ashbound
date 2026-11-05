@@ -152,11 +152,10 @@ MonoBehaviour:
   hubRoom: {fileID: 2370994099976602782, guid: 123261ccef54947438d183a2b2ef49dc, type: 3}
   restRoom: {fileID: 2370994099976602782, guid: fc831eadc2e9d6d458daca7475673c02, type: 3}
   exitRoom: {fileID: 4476307018893591153, guid: 56755a37f1de3584b80dfa6b4bb18770, type: 3}
-  roomPool:
-  - {fileID: 9222752670669948641, guid: 025127d32176b4548bcf57223dd15ec6, type: 3}
-  - {fileID: 3912820583899915210, guid: 98239c05d0897fa4bb5a7e9d470990af, type: 3}
-  - {fileID: 8325124015010001105, guid: 19aa17101012bc84183264d595a6af91, type: 3}
-  - {fileID: 6576705282341265171, guid: 43d8d77a737e7c342aade6342c0c6ef0, type: 3}
+  mapPool:
+  - {fileID: 4457425651648662099, guid: 12e5f89af70ba8b43be8ad9d0c92f55c, type: 3}
+  - {fileID: 9056521934028028871, guid: 95084966082a1e94ca03df9963fd9456, type: 3}
+  - {fileID: 8724218176126017025, guid: a1b295d124845b145a339adf6cce0859, type: 3}
   enemyPool:
   - {fileID: 1956810008456885546, guid: 4d521eb251ba453499b04c500e463628, type: 3}
   - {fileID: 7618090887002180766, guid: bc4d304367078c142b1d955b57741050, type: 3}
@@ -164,10 +163,8 @@ MonoBehaviour:
   - {fileID: 8207147374973633234, guid: 1259d59b0a16e4040913e4b41ba32fb4, type: 3}
   player: {fileID: 1109068951}
   progression: {fileID: 96572422}
-  portalPrefab: {fileID: 338732425725357725, guid: 3ba09937d2a7e0d4db552304ea6c2225, type: 3}
   followCamera: {fileID: 222642636}
   mapsPerRun: 2
-  roomsPerMap: 2
   loot:
   - prefab: {fileID: 4140624688520277673, guid: 1972570df33986a40abcc3647b3602c7, type: 3}
     weight: 3
@@ -184,6 +181,8 @@ MonoBehaviour:
   statStepPerRoom: 0.3
   baseSpawnChance: 0.6
   spawnChanceStep: 0.2
+  dangerEmberScale: 1.5
+  dangerBossScale: 1.25
   fixedSeed: 0
   restartDelay: 2
 --- !u!4 &96572421
@@ -854,6 +853,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1208537313197675920, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: run
+      value: 
+      objectReference: {fileID: 96572420}
+    - target: {fileID: 1208537313197675920, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1109068950}
     - target: {fileID: 2033825970627815520, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
       propertyPath: player
       value: 

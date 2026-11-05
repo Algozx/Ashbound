@@ -19,6 +19,7 @@ Planned input, already mapped in the Input System:
 | Skills | Q and E | Left and right triggers |
 | Interact | F | Right shoulder |
 | Healing flask, once unlocked | Q | Left trigger |
+| Map | M | Select |
 | Pause | Escape or P | Start |
 
 ## About

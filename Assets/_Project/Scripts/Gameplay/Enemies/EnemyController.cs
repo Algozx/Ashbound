@@ -60,7 +60,7 @@ namespace Ashbound.Gameplay.Enemies
         public event System.Action<Vector2, int> Killed;
 
         /// <summary>Prepares a spawned enemy: who it hunts, where it stays and how strong it is.</summary>
-        public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale, SeededRandom patrolRandom)
+        public void Configure(Transform newTarget, float roomMinX, float roomMaxX, float statScale, float emberScale, SeededRandom patrolRandom)
         {
             brain.UseRandom(patrolRandom);
             target = newTarget;
@@ -68,7 +68,7 @@ namespace Ashbound.Gameplay.Enemies
             maxX = roomMaxX;
             health = new Health(Mathf.RoundToInt(definition.MaxHealth * statScale));
             damage = Mathf.RoundToInt(definition.Damage * statScale);
-            embers = Mathf.RoundToInt(definition.Embers * statScale);
+            embers = Mathf.RoundToInt(definition.Embers * statScale * emberScale);
         }
 
         public bool TakeHit(in HitInfo hit)

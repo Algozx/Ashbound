@@ -42,7 +42,7 @@ namespace Ashbound.Gameplay.Enemies
 
         public string DisplayName => definition.DisplayName;
 
-        public int Embers => definition.Embers;
+        public int Embers { get; private set; }
 
         public int CurrentHealth => health.Current;
 
@@ -57,6 +57,13 @@ namespace Ashbound.Gameplay.Enemies
 
         /// <summary>Raised once, when the boss dies.</summary>
         public event Action Defeated;
+
+        /// <summary>Scales health and Embers, for a boss reached through a danger portal.</summary>
+        public void Strengthen(float scale)
+        {
+            health = new Health(Mathf.RoundToInt(definition.MaxHealth * scale));
+            Embers = Mathf.RoundToInt(definition.Embers * scale);
+        }
 
         /// <summary>Starts the fight against a target.</summary>
         public void Wake(Transform newTarget)
@@ -92,6 +99,7 @@ namespace Ashbound.Gameplay.Enemies
             mover = GetComponent<KinematicMover>();
             brain = new BossBrain(definition.ToBrainSettings());
             health = new Health(definition.MaxHealth);
+            Embers = definition.Embers;
             shownState = BossState.Waiting;
             spells = new ObjectPool<BossSpell>(
                 () => Instantiate(spellPrefab, transform.parent),
