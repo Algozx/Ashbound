@@ -38,6 +38,8 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private Color telegraphColor = new Color(1f, 0.75f, 0.35f);
         [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f);
         [SerializeField] private float corpseTime = 1.2f;
+        [SerializeField] private ParticleSystem hitEffect;
+        [SerializeField] private ParticleSystem deathEffect;
 
         private KinematicMover mover;
         private EnemyBrain brain;
@@ -49,6 +51,7 @@ namespace Ashbound.Gameplay.Enemies
         private float knockbackVelocity;
         private float fallVelocity;
         private float flashTimer;
+        private float corpseAlpha = 1f;
         private float minX = float.NegativeInfinity;
         private float maxX = float.PositiveInfinity;
 
@@ -79,6 +82,7 @@ namespace Ashbound.Gameplay.Enemies
             }
 
             flashTimer = HitFlashTime;
+            hitEffect.Play();
             bool killed = health.Damage(hit.Damage);
             knockbackVelocity = (transform.position.x >= hit.SourceX ? 1f : -1f) * hit.Knockback;
 
@@ -86,6 +90,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
+                deathEffect.Play();
                 Killed?.Invoke(transform.position, embers);
                 StartCoroutine(RemoveCorpse());
             }
@@ -182,14 +187,10 @@ namespace Ashbound.Gameplay.Enemies
             spriteRenderer.flipX = brain.Facing < 0;
             flashTimer = Mathf.Max(0f, flashTimer - Time.unscaledDeltaTime);
 
-            if (flashTimer > 0f)
-            {
-                spriteRenderer.color = hitColor;
-            }
-            else
-            {
-                spriteRenderer.color = brain.State == EnemyState.Telegraph ? telegraphColor : Color.white;
-            }
+            Color color = brain.State == EnemyState.Telegraph ? telegraphColor : Color.white;
+            color = flashTimer > 0f ? hitColor : color;
+            color.a = corpseAlpha;
+            spriteRenderer.color = color;
 
             if (brain.State != shownState)
             {
@@ -310,7 +311,12 @@ namespace Ashbound.Gameplay.Enemies
 
         private IEnumerator RemoveCorpse()
         {
-            yield return new WaitForSeconds(corpseTime);
+            for (float t = 0f; t < corpseTime; t += Time.deltaTime)
+            {
+                corpseAlpha = 1f - t / corpseTime;
+                yield return null;
+            }
+
             gameObject.SetActive(false);
         }
     }

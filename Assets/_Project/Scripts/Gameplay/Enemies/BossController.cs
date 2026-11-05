@@ -28,6 +28,8 @@ namespace Ashbound.Gameplay.Enemies
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private AttackAnimationEvents animationEvents;
+        [SerializeField] private ParticleSystem hitEffect;
+        [SerializeField] private ParticleSystem deathEffect;
         [SerializeField] private Color enragedColor = new Color(1f, 0.7f, 0.7f);
         [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f);
 
@@ -80,6 +82,7 @@ namespace Ashbound.Gameplay.Enemies
             }
 
             flashTimer = HitFlashTime;
+            hitEffect.Play();
             bool killed = health.Damage(hit.Damage);
             brain.OnHealthChanged((float)health.Current / health.Max);
             HealthChanged?.Invoke(health.Current, health.Max);
@@ -88,6 +91,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
+                deathEffect.Play();
                 Defeated?.Invoke();
             }
 

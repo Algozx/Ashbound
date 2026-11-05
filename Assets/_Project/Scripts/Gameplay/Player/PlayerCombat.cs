@@ -16,6 +16,7 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private InputActionReference interactAction;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private CombatFeedback feedback;
+        [SerializeField] private ParticleSystem hurtEffect;
 
         [Header("Health")]
         [SerializeField] private int maxHealth = 100;
@@ -51,6 +52,9 @@ namespace Ashbound.Gameplay.Player
 
         /// <summary>Raised with current and maximum health after a hit.</summary>
         public event Action<int, int> HealthChanged;
+
+        /// <summary>Raised whenever a hit lands on the player.</summary>
+        public event Action Hurt;
 
         /// <summary>Raised once, on the killing hit.</summary>
         public event Action Died;
@@ -112,6 +116,8 @@ namespace Ashbound.Gameplay.Player
             float direction = transform.position.x >= hit.SourceX ? 1f : -1f;
             controller.Hurt(direction * hit.Knockback, hurtLift, hurtStun, hurtInvulnerability);
             feedback.PlayHurt(hurtStop, hurtShake);
+            hurtEffect.Play();
+            Hurt?.Invoke();
             HealthChanged?.Invoke(health.Current, health.Max);
 
             if (killed)

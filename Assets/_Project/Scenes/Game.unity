@@ -333,6 +333,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0740ee3979fde1b4398e247d8d779c52, type: 3}
   - {fileID: 8300000, guid: 39ca778c168ba1645866741f90f2b057, type: 3}
   - {fileID: 8300000, guid: ac3db4ace88f6204f97dc32aa42fa8dc, type: 3}
+  emberVolume: 0.3
+  emberSoundGap: 0.09
   buySound: {fileID: 8300000, guid: 49a95e59e3797094e96ce51c457341c4, type: 3}
 --- !u!82 &96572423
 AudioSource:
@@ -1087,8 +1089,8 @@ MonoBehaviour:
   m_SelectionSources:
     rid: 4524972035110862848
   m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.8, g: 0.84, b: 1, a: 1}
+  m_Intensity: 0.72
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000de26d613c152ab789276cc2c530374309a773577i
@@ -1369,6 +1371,10 @@ PrefabInstance:
       propertyPath: progression
       value: 
       objectReference: {fileID: 96572422}
+    - target: {fileID: 3497688562671880907, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1109068951}
     - target: {fileID: 6252500307790618990, guid: abd2c92666b9c11439db7726f8d2d2c1, type: 3}
       propertyPath: heat
       value: 

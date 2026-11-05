@@ -19,11 +19,15 @@ namespace Ashbound.Gameplay.Meta
         [SerializeField] private EmberPickup emberPrefab;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip[] emberSounds;
+        [SerializeField, Range(0f, 1f)] private float emberVolume = 0.3f;
+        [Tooltip("Shortest gap between Ember sounds, so a burst does not stack them.")]
+        [SerializeField] private float emberSoundGap = 0.09f;
         [SerializeField] private AudioClip buySound;
 
         private Profile profile;
         private EmberWallet wallet;
         private ObjectPool<EmberPickup> embers;
+        private float nextEmberSound;
 
         public UnlockDefinition[] Unlocks => unlocks;
 
@@ -150,7 +154,12 @@ namespace Ashbound.Gameplay.Meta
         private void OnEmberCollected(EmberPickup ember)
         {
             Wallet.Collect(ember.Value);
-            audioSource.PlayOneShot(emberSounds[UnityEngine.Random.Range(0, emberSounds.Length)]);
+            if (Time.time >= nextEmberSound)
+            {
+                nextEmberSound = Time.time + emberSoundGap;
+                audioSource.PlayOneShot(emberSounds[UnityEngine.Random.Range(0, emberSounds.Length)], emberVolume);
+            }
+
             embers.Release(ember);
             EmbersChanged?.Invoke();
         }
