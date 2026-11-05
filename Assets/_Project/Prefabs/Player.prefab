@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 8673360601889834493}
   - component: {fileID: 4806302614137191740}
   - component: {fileID: 3381858284181529889}
+  - component: {fileID: 3050284059794541043}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -494,6 +495,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerFlask
   useAction: {fileID: 6590191039323128469, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   healAmount: 40
+--- !u!114 &3050284059794541043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6840722876222504080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940afbaa76b05974187749a03428c8fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Player.PlayerHeat
+  hitsPerLevel: 6
+  decayTime: 6
+  damageBonus:
+  - 0.05
+  - 0.1
+  - 0.2
+  emberBonus:
+  - 0.25
+  - 0.5
+  - 0.75
+  hottestTint: {r: 1, g: 0.65, b: 0.35, a: 1}
 --- !u!1 &6961613374802940793
 GameObject:
   m_ObjectHideFlags: 0

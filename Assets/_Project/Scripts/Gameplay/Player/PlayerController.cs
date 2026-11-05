@@ -42,6 +42,9 @@ namespace Ashbound.Gameplay.Player
         private bool attackBlocksJump;
         private float attackMoveScale = 1f;
 
+        /// <summary>Color the character is drawn with.</summary>
+        public Color Tint { get; set; } = Color.white;
+
         public bool IsInvulnerable => motor.IsInvulnerable;
 
         public bool IsDashing => motor.IsDashing;
@@ -156,7 +159,7 @@ namespace Ashbound.Gameplay.Player
 
             bool blink = !dead && motor.IsInvulnerable && !motor.IsDashing
                 && Mathf.Repeat(Time.time * BlinkRate, 2f) < 1f;
-            spriteRenderer.color = blink ? new Color(1f, 1f, 1f, 0.35f) : Color.white;
+            spriteRenderer.color = blink ? new Color(Tint.r, Tint.g, Tint.b, 0.35f) : Tint;
 
             int wanted = PickAnimation();
             if (wanted != shownState)

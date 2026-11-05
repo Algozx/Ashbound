@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace Ashbound.Gameplay.Player
 {
     /// <summary>The player's weapon and health.</summary>
-    [RequireComponent(typeof(PlayerController))]
+    [RequireComponent(typeof(PlayerController), typeof(PlayerHeat))]
     public sealed class PlayerCombat : MonoBehaviour, IDamageable
     {
         [SerializeField] private WeaponDefinition weapon;
@@ -30,6 +30,7 @@ namespace Ashbound.Gameplay.Player
 
         private PlayerController controller;
         private PlayerFlask flask;
+        private PlayerHeat heat;
         private AttackCombo combo;
         private Health health;
         private float[] stepDurations;
@@ -106,6 +107,7 @@ namespace Ashbound.Gameplay.Player
             }
 
             EndAttack();
+            heat.Extinguish();
             bool killed = health.Damage(hit.Damage);
             float direction = transform.position.x >= hit.SourceX ? 1f : -1f;
             controller.Hurt(direction * hit.Knockback, hurtLift, hurtStun, hurtInvulnerability);
@@ -125,6 +127,7 @@ namespace Ashbound.Gameplay.Player
         {
             controller = GetComponent<PlayerController>();
             flask = GetComponent<PlayerFlask>();
+            heat = GetComponent<PlayerHeat>();
             health = new Health(maxHealth);
             UseWeapon(weapon);
         }
@@ -184,7 +187,8 @@ namespace Ashbound.Gameplay.Player
             currentStep = step;
             hitbox.Close();
             controller.FaceInputDirection();
-            hitbox.Configure(new HitInfo { Damage = step.Damage, Knockback = step.Knockback }, controller.Facing);
+            int damage = Mathf.CeilToInt(step.Damage * heat.DamageScale);
+            hitbox.Configure(new HitInfo { Damage = damage, Knockback = step.Knockback }, controller.Facing);
             controller.PlayAttack(step.ClipStart / weapon.ClipLength, (step.ClipEnd - step.ClipStart) / step.Duration);
             controller.Lunge(step.Lunge);
             feedback.PlaySwing();
@@ -199,6 +203,7 @@ namespace Ashbound.Gameplay.Player
 
         private void OnHitLanded()
         {
+            heat.RegisterHit();
             feedback.PlayHit(currentStep.HitStop, currentStep.ShakeForce);
         }
     }

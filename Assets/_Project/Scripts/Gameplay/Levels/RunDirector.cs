@@ -197,7 +197,7 @@ namespace Ashbound.Gameplay.Levels
                     float minX = position.x - EnemyTerritory;
                     float maxX = position.x + EnemyTerritory;
                     enemy.Configure(player.transform, minX, maxX, difficulty.StatScale(depth), emberScale, spawnRandom.Fork((ulong)i + 1));
-                    enemy.Killed += progression.DropEmbers;
+                    enemy.Killed += DropHeatedEmbers;
                 }
             }
         }
@@ -216,7 +216,13 @@ namespace Ashbound.Gameplay.Levels
 
         private void OnBossDefeated()
         {
-            progression.DropEmbers(Arena.Boss.transform.position, Arena.Boss.Embers);
+            DropHeatedEmbers(Arena.Boss.transform.position, Arena.Boss.Embers);
+        }
+
+        private void DropHeatedEmbers(Vector2 position, int amount)
+        {
+            float scale = player.GetComponent<PlayerHeat>().EmberScale;
+            progression.DropEmbers(position, Mathf.RoundToInt(amount * scale));
         }
 
         private void OnPlayerDied()
