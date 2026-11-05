@@ -329,12 +329,6 @@ MonoBehaviour:
   flask: {fileID: 1109068952}
   emberPrefab: {fileID: 8864832745260535980, guid: 1c77af477c51a354ebcc9691f1fd025f, type: 3}
   audioSource: {fileID: 96572423}
-  emberSounds:
-  - {fileID: 8300000, guid: 0740ee3979fde1b4398e247d8d779c52, type: 3}
-  - {fileID: 8300000, guid: 39ca778c168ba1645866741f90f2b057, type: 3}
-  - {fileID: 8300000, guid: ac3db4ace88f6204f97dc32aa42fa8dc, type: 3}
-  emberVolume: 0.3
-  emberSoundGap: 0.09
   buySound: {fileID: 8300000, guid: 49a95e59e3797094e96ce51c457341c4, type: 3}
 --- !u!82 &96572423
 AudioSource:
