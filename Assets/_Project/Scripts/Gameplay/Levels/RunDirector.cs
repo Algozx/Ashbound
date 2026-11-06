@@ -25,6 +25,7 @@ namespace Ashbound.Gameplay.Levels
         private const float RestHeight = -200f;
         private const float EnemyTerritory = 14f;
         private const int DangerDepth = 1;
+        private const float MapShutdownDelay = 1f;
 
         private static readonly Vector3 ArrivalOffset = new Vector3(3f, 0.02f, 0f);
 
@@ -54,6 +55,7 @@ namespace Ashbound.Gameplay.Levels
         [SerializeField] private float restartDelay = 2f;
 
         private GameMap[] maps;
+        private GameMap currentMap;
         private DifficultyCurve difficulty;
         private SeededRandom spawnRandom;
         private SeededRandom lootRandom;
@@ -106,6 +108,7 @@ namespace Ashbound.Gameplay.Levels
             {
                 var position = new Vector3(MapSpacing * (i + 1), 0f, 0f);
                 maps[i] = Instantiate(mapPool[order[i]], position, Quaternion.identity, transform);
+                maps[i].gameObject.SetActive(false);
             }
 
             Portal next = hub.GetComponentInChildren<Portal>();
@@ -159,6 +162,9 @@ namespace Ashbound.Gameplay.Levels
         private void EnterMap(int index)
         {
             GameMap map = maps[index];
+            currentMap = map;
+            map.gameObject.SetActive(true);
+            UnityEngine.Physics2D.SyncTransforms();
             int depth = index + (dangerAhead ? DangerDepth : 0);
             SpawnEnemies(map, depth, dangerAhead ? dangerEmberScale : 1f);
             foreach (Transform spot in map.TreasureSpots)
@@ -173,6 +179,14 @@ namespace Ashbound.Gameplay.Levels
         {
             dangerAhead = dangerous;
             MapChanged?.Invoke(null);
+            StartCoroutine(ShutDown(currentMap));
+        }
+
+        // Waits so the portal's sound can finish and its prompt can clear.
+        private IEnumerator ShutDown(GameMap map)
+        {
+            yield return new WaitForSeconds(MapShutdownDelay);
+            map.gameObject.SetActive(false);
         }
 
         private void OnBossRoomEntered()
