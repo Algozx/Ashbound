@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3990168231546867947}
   - component: {fileID: 1551949657709776886}
   - component: {fileID: 8207147374973633234}
+  - component: {fileID: 7843648862893042120}
   m_Layer: 8
   m_Name: FlyingEye
   m_TagString: Untagged
@@ -147,16 +148,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyController
   definition: {fileID: 11400000, guid: 39939b4710fc82b48ae1ea1ee29a4443, type: 2}
   target: {fileID: 0}
-  animator: {fileID: 263452231412146882}
-  spriteRenderer: {fileID: 6323599026770063217}
   hitbox: {fileID: 7684464655043730382}
   animationEvents: {fileID: 4935339400640675792}
   bodyCollider: {fileID: 3990168231546867947}
   telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
-  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   corpseTime: 1.2
+--- !u!114 &7843648862893042120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431690428834485282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2668b7007baa949bce8ae8223826ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.CharacterView
+  animator: {fileID: 263452231412146882}
+  spriteRenderer: {fileID: 6323599026770063217}
   hitEffect: {fileID: 8177192781376498149}
   deathEffect: {fileID: 5170291867819792370}
+  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  flashTime: 0.1
+  spritesFaceLeft: 0
 --- !u!1 &4092524614431654564
 GameObject:
   m_ObjectHideFlags: 0

@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 8950640380900444229}
   - component: {fileID: 5042767291080198117}
   - component: {fileID: 7618090887002180766}
+  - component: {fileID: 5546549049811309556}
   m_Layer: 8
   m_Name: Goblin
   m_TagString: Untagged
@@ -276,16 +277,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyController
   definition: {fileID: 11400000, guid: 5253b6bdd5b7f9448a97f89affe6b1ce, type: 2}
   target: {fileID: 0}
-  animator: {fileID: 3368058719129478735}
-  spriteRenderer: {fileID: 6970773093329119811}
   hitbox: {fileID: 5067910922180976589}
   animationEvents: {fileID: 8729073180817400090}
   bodyCollider: {fileID: 8950640380900444229}
   telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
-  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   corpseTime: 1.2
+--- !u!114 &5546549049811309556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5689823484183144811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2668b7007baa949bce8ae8223826ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.CharacterView
+  animator: {fileID: 3368058719129478735}
+  spriteRenderer: {fileID: 6970773093329119811}
   hitEffect: {fileID: 7043983701505939202}
   deathEffect: {fileID: 3878843784638364222}
+  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  flashTime: 0.1
+  spritesFaceLeft: 0
 --- !u!1 &8214602497993055651
 GameObject:
   m_ObjectHideFlags: 0

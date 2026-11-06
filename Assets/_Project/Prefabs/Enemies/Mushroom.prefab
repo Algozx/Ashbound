@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 6707997385090766640}
   - component: {fileID: 3135495638627464341}
   - component: {fileID: 6204778707565411512}
+  - component: {fileID: 3974335079207704875}
   m_Layer: 8
   m_Name: Mushroom
   m_TagString: Untagged
@@ -326,16 +327,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.EnemyController
   definition: {fileID: 11400000, guid: 5275e937ae760864586037d04f506b48, type: 2}
   target: {fileID: 0}
-  animator: {fileID: 2965535730572911956}
-  spriteRenderer: {fileID: 7755237838908240844}
   hitbox: {fileID: 7814567451112230012}
   animationEvents: {fileID: 563423528970725587}
   bodyCollider: {fileID: 6707997385090766640}
   telegraphColor: {r: 1, g: 0.75, b: 0.35, a: 1}
-  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
   corpseTime: 1.2
+--- !u!114 &3974335079207704875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8966852742842194580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2668b7007baa949bce8ae8223826ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.CharacterView
+  animator: {fileID: 2965535730572911956}
+  spriteRenderer: {fileID: 7755237838908240844}
   hitEffect: {fileID: 2297701635908671402}
   deathEffect: {fileID: 3315233733360639237}
+  hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  flashTime: 0.1
+  spritesFaceLeft: 0
 --- !u!1001 &437101956076741420
 PrefabInstance:
   m_ObjectHideFlags: 0

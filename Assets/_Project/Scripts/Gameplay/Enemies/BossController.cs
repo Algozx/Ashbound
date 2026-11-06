@@ -9,38 +9,28 @@ using UnityEngine.Pool;
 namespace Ashbound.Gameplay.Enemies
 {
     /// <summary>Binds <see cref="BossBrain"/> to a body, an animator and its attacks.</summary>
-    [RequireComponent(typeof(KinematicMover))]
+    [RequireComponent(typeof(KinematicMover), typeof(CharacterView))]
     public sealed class BossController : MonoBehaviour, IDamageable
     {
-        private const float HitFlashTime = 0.08f;
         private const float GroundProbeDistance = 30f;
         private const float Gravity = 40f;
 
-        private static readonly int IdleState = Animator.StringToHash("Idle");
-        private static readonly int WalkState = Animator.StringToHash("Walk");
-        private static readonly int AttackState = Animator.StringToHash("Attack");
         private static readonly int CastState = Animator.StringToHash("Cast");
-        private static readonly int DeathState = Animator.StringToHash("Death");
 
         [SerializeField] private BossDefinition definition;
         [SerializeField] private BossSpell spellPrefab;
-        [SerializeField] private Animator animator;
-        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private AttackAnimationEvents animationEvents;
-        [SerializeField] private ParticleSystem hitEffect;
-        [SerializeField] private ParticleSystem deathEffect;
         [SerializeField] private Color enragedColor = new Color(1f, 0.7f, 0.7f);
-        [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f);
 
         private KinematicMover mover;
+        private CharacterView view;
         private BossBrain brain;
         private Health health;
         private ObjectPool<BossSpell> spells;
         private Transform target;
         private BossState shownState;
         private float fallVelocity;
-        private float flashTimer;
 
         public string DisplayName => definition.DisplayName;
 
@@ -81,8 +71,7 @@ namespace Ashbound.Gameplay.Enemies
                 return false;
             }
 
-            flashTimer = HitFlashTime;
-            hitEffect.Play();
+            view.ShowHit();
             bool killed = health.Damage(hit.Damage);
             brain.OnHealthChanged((float)health.Current / health.Max);
             HealthChanged?.Invoke(health.Current, health.Max);
@@ -91,7 +80,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
-                deathEffect.Play();
+                view.ShowDeath();
                 Defeated?.Invoke();
             }
 
@@ -101,6 +90,7 @@ namespace Ashbound.Gameplay.Enemies
         private void Awake()
         {
             mover = GetComponent<KinematicMover>();
+            view = GetComponent<CharacterView>();
             brain = new BossBrain(definition.ToBrainSettings());
             health = new Health(definition.MaxHealth);
             Embers = definition.Embers;
@@ -135,18 +125,7 @@ namespace Ashbound.Gameplay.Enemies
 
         private void LateUpdate()
         {
-            // The sprites face left.
-            spriteRenderer.flipX = brain.Facing > 0;
-            flashTimer = Mathf.Max(0f, flashTimer - Time.unscaledDeltaTime);
-
-            if (flashTimer > 0f)
-            {
-                spriteRenderer.color = hitColor;
-            }
-            else
-            {
-                spriteRenderer.color = brain.IsEnraged ? enragedColor : Color.white;
-            }
+            view.Draw(brain.Facing, brain.IsEnraged ? enragedColor : Color.white);
 
             if (brain.State != shownState)
             {
@@ -175,7 +154,7 @@ namespace Ashbound.Gameplay.Enemies
                 hitbox.Close();
             }
 
-            animator.Play(AnimationFor(state), 0, 0f);
+            view.PlayAnimation(AnimationFor(state));
         }
 
         private static int AnimationFor(BossState state)
@@ -183,17 +162,17 @@ namespace Ashbound.Gameplay.Enemies
             switch (state)
             {
                 case BossState.Approach:
-                    return WalkState;
+                    return CharacterView.Walk;
                 case BossState.MeleeWindup:
                 case BossState.MeleeStrike:
-                    return AttackState;
+                    return CharacterView.Attack;
                 case BossState.CastWindup:
                 case BossState.CastRelease:
                     return CastState;
                 case BossState.Dead:
-                    return DeathState;
+                    return CharacterView.Death;
                 default:
-                    return IdleState;
+                    return CharacterView.Idle;
             }
         }
 

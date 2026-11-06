@@ -10,10 +10,9 @@ using UnityEngine.Pool;
 namespace Ashbound.Gameplay.Enemies
 {
     /// <summary>Binds <see cref="EnemyBrain"/> to a body, an animator and its attacks.</summary>
-    [RequireComponent(typeof(KinematicMover))]
+    [RequireComponent(typeof(KinematicMover), typeof(CharacterView))]
     public sealed class EnemyController : MonoBehaviour, IDamageable
     {
-        private const float HitFlashTime = 0.1f;
         private const float LookAhead = 0.1f;
         private const float LedgeProbeDepth = 0.6f;
         private const float TargetChestHeight = 1f;
@@ -22,26 +21,18 @@ namespace Ashbound.Gameplay.Enemies
         private const float DetourStep = 0.5f;
         private const float DetourSearch = 8f;
 
-        private static readonly int WalkState = Animator.StringToHash("Walk");
-        private static readonly int IdleState = Animator.StringToHash("Idle");
-        private static readonly int AttackState = Animator.StringToHash("Attack");
         private static readonly int HurtState = Animator.StringToHash("Hurt");
-        private static readonly int DeathState = Animator.StringToHash("Death");
 
         [SerializeField] private EnemyDefinition definition;
         [SerializeField] private Transform target;
-        [SerializeField] private Animator animator;
-        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Hitbox hitbox;
         [SerializeField] private AttackAnimationEvents animationEvents;
         [SerializeField] private Collider2D bodyCollider;
         [SerializeField] private Color telegraphColor = new Color(1f, 0.75f, 0.35f);
-        [SerializeField] private Color hitColor = new Color(1f, 0.35f, 0.35f);
         [SerializeField] private float corpseTime = 1.2f;
-        [SerializeField] private ParticleSystem hitEffect;
-        [SerializeField] private ParticleSystem deathEffect;
 
         private KinematicMover mover;
+        private CharacterView view;
         private EnemyBrain brain;
         private Health health;
         private ObjectPool<Projectile> projectiles;
@@ -50,8 +41,6 @@ namespace Ashbound.Gameplay.Enemies
         private int embers;
         private float knockbackVelocity;
         private float fallVelocity;
-        private float flashTimer;
-        private float corpseAlpha = 1f;
         private float minX = float.NegativeInfinity;
         private float maxX = float.PositiveInfinity;
 
@@ -81,8 +70,7 @@ namespace Ashbound.Gameplay.Enemies
                 return false;
             }
 
-            flashTimer = HitFlashTime;
-            hitEffect.Play();
+            view.ShowHit();
             bool killed = health.Damage(hit.Damage);
             knockbackVelocity = (transform.position.x >= hit.SourceX ? 1f : -1f) * hit.Knockback;
 
@@ -90,7 +78,7 @@ namespace Ashbound.Gameplay.Enemies
             {
                 brain.OnKilled();
                 hitbox.Close();
-                deathEffect.Play();
+                view.ShowDeath();
                 Killed?.Invoke(transform.position, embers);
                 StartCoroutine(RemoveCorpse());
             }
@@ -105,6 +93,7 @@ namespace Ashbound.Gameplay.Enemies
         private void Awake()
         {
             mover = GetComponent<KinematicMover>();
+            view = GetComponent<CharacterView>();
             brain = new EnemyBrain(definition.ToBrainSettings());
             health = new Health(definition.MaxHealth);
             damage = definition.Damage;
@@ -184,13 +173,7 @@ namespace Ashbound.Gameplay.Enemies
 
         private void LateUpdate()
         {
-            spriteRenderer.flipX = brain.Facing < 0;
-            flashTimer = Mathf.Max(0f, flashTimer - Time.unscaledDeltaTime);
-
-            Color color = brain.State == EnemyState.Telegraph ? telegraphColor : Color.white;
-            color = flashTimer > 0f ? hitColor : color;
-            color.a = corpseAlpha;
-            spriteRenderer.color = color;
+            view.Draw(brain.Facing, brain.State == EnemyState.Telegraph ? telegraphColor : Color.white);
 
             if (brain.State != shownState)
             {
@@ -217,7 +200,7 @@ namespace Ashbound.Gameplay.Enemies
                 hitbox.Close();
             }
 
-            animator.Play(AnimationFor(state), 0, 0f);
+            view.PlayAnimation(AnimationFor(state));
         }
 
         private static int AnimationFor(EnemyState state)
@@ -227,16 +210,16 @@ namespace Ashbound.Gameplay.Enemies
                 case EnemyState.Patrol:
                 case EnemyState.Chase:
                 case EnemyState.Return:
-                    return WalkState;
+                    return CharacterView.Walk;
                 case EnemyState.Telegraph:
                 case EnemyState.Strike:
-                    return AttackState;
+                    return CharacterView.Attack;
                 case EnemyState.Hurt:
                     return HurtState;
                 case EnemyState.Dead:
-                    return DeathState;
+                    return CharacterView.Death;
                 default:
-                    return IdleState;
+                    return CharacterView.Idle;
             }
         }
 
@@ -313,7 +296,7 @@ namespace Ashbound.Gameplay.Enemies
         {
             for (float t = 0f; t < corpseTime; t += Time.deltaTime)
             {
-                corpseAlpha = 1f - t / corpseTime;
+                view.Alpha = 1f - t / corpseTime;
                 yield return null;
             }
 

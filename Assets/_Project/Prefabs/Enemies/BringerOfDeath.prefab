@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 2875061650134752210}
   - component: {fileID: 3497966137785121494}
   - component: {fileID: 4818791771370780119}
+  - component: {fileID: 1875706237918144665}
   m_Layer: 8
   m_Name: BringerOfDeath
   m_TagString: Untagged
@@ -326,14 +327,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Enemies.BossController
   definition: {fileID: 11400000, guid: 2f1e005681fa3124985e6f3701609627, type: 2}
   spellPrefab: {fileID: 1001964926669836434, guid: 51ecd9e4d333cbf43b270526409fc325, type: 3}
-  animator: {fileID: 4115635541486890578}
-  spriteRenderer: {fileID: 8804478528589184138}
   hitbox: {fileID: 1067907845052407079}
   animationEvents: {fileID: 3401144551467342707}
+  enragedColor: {r: 1, g: 0.7, b: 0.7, a: 1}
+--- !u!114 &1875706237918144665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7928891930266501272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2668b7007baa949bce8ae8223826ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ashbound.Gameplay::Ashbound.Gameplay.Combat.CharacterView
+  animator: {fileID: 4115635541486890578}
+  spriteRenderer: {fileID: 8804478528589184138}
   hitEffect: {fileID: 2935353889616996761}
   deathEffect: {fileID: 6119638021429268024}
-  enragedColor: {r: 1, g: 0.7, b: 0.7, a: 1}
   hitColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  flashTime: 0.08
+  spritesFaceLeft: 1
 --- !u!1001 &3553215107113688351
 PrefabInstance:
   m_ObjectHideFlags: 0

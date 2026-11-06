@@ -4,25 +4,59 @@ using UnityEngine;
 namespace Ashbound.Gameplay.Pickups
 {
     /// <summary>Restores health on touch. It stays in place while the player is at full health.</summary>
+    [RequireComponent(typeof(BoxCollider2D))]
     public sealed class HealthPickup : MonoBehaviour
     {
         [SerializeField] private int amount = 35;
-        [SerializeField] private Vector2 size = new Vector2(1.2f, 1.6f);
-        [SerializeField] private LayerMask playerLayers;
 
-        private void FixedUpdate()
+        private PlayerCombat visitor;
+
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            Collider2D touching = UnityEngine.Physics2D.OverlapBox(transform.position, size, 0f, playerLayers);
-            if (touching == null)
+            PlayerCombat player = other.GetComponentInParent<PlayerCombat>();
+            if (player != null)
             {
-                return;
+                visitor = player;
+                visitor.HealthChanged += OnVisitorHealthChanged;
+                TryHeal();
             }
+        }
 
-            var player = touching.GetComponentInParent<PlayerCombat>();
-            if (player != null && player.CurrentHealth < player.MaxHealth)
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.GetComponentInParent<PlayerCombat>() != null)
             {
+                Forget();
+            }
+        }
+
+        private void OnDisable()
+        {
+            Forget();
+        }
+
+        private void OnVisitorHealthChanged(int current, int max)
+        {
+            TryHeal();
+        }
+
+        private void TryHeal()
+        {
+            if (visitor != null && visitor.CurrentHealth < visitor.MaxHealth)
+            {
+                PlayerCombat player = visitor;
+                Forget();
                 player.Heal(amount);
                 gameObject.SetActive(false);
+            }
+        }
+
+        private void Forget()
+        {
+            if (visitor != null)
+            {
+                visitor.HealthChanged -= OnVisitorHealthChanged;
+                visitor = null;
             }
         }
     }

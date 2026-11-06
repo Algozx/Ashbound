@@ -3,12 +3,10 @@ using UnityEngine;
 
 namespace Ashbound.Gameplay.Pickups
 {
-    /// <summary>Something the player can use with the interact button while standing next to it.</summary>
+    /// <summary>Something the player can use with the interact button while inside its trigger.</summary>
+    [RequireComponent(typeof(BoxCollider2D))]
     public abstract class Interactable : MonoBehaviour
     {
-        [SerializeField] private Vector2 size = new Vector2(1.6f, 2f);
-        [SerializeField] private LayerMask playerLayers;
-
         private PlayerCombat nearby;
 
         /// <summary>What the interact button does here.</summary>
@@ -16,25 +14,36 @@ namespace Ashbound.Gameplay.Pickups
 
         public abstract void Interact(PlayerCombat player);
 
-        private void FixedUpdate()
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            Collider2D touching = UnityEngine.Physics2D.OverlapBox(transform.position, size, 0f, playerLayers);
-            PlayerCombat player = touching != null ? touching.GetComponentInParent<PlayerCombat>() : null;
-
-            if (player == nearby)
+            PlayerCombat player = other.GetComponentInParent<PlayerCombat>();
+            if (player != null)
             {
-                return;
+                nearby = player;
+                nearby.SetNearbyInteractable(this);
             }
+        }
 
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.GetComponentInParent<PlayerCombat>() != null)
+            {
+                Forget();
+            }
+        }
+
+        // A map switching off sends no exit message.
+        private void OnDisable()
+        {
+            Forget();
+        }
+
+        private void Forget()
+        {
             if (nearby != null)
             {
                 nearby.ClearNearbyInteractable(this);
-            }
-
-            nearby = player;
-            if (nearby != null)
-            {
-                nearby.SetNearbyInteractable(this);
+                nearby = null;
             }
         }
     }

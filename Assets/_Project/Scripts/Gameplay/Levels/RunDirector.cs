@@ -56,6 +56,7 @@ namespace Ashbound.Gameplay.Levels
 
         private GameMap[] maps;
         private GameMap currentMap;
+        private PlayerHeat playerHeat;
         private DifficultyCurve difficulty;
         private SeededRandom spawnRandom;
         private SeededRandom lootRandom;
@@ -76,6 +77,8 @@ namespace Ashbound.Gameplay.Levels
 
         private void Awake()
         {
+            playerHeat = player.GetComponent<PlayerHeat>();
+
             // Nine digits are short enough to read out and share.
             Seed = fixedSeed != 0 ? (ulong)fixedSeed : (ulong)(DateTime.Now.Ticks % 1000000000L);
             BuildRun();
@@ -235,8 +238,7 @@ namespace Ashbound.Gameplay.Levels
 
         private void DropHeatedEmbers(Vector2 position, int amount)
         {
-            float scale = player.GetComponent<PlayerHeat>().EmberScale;
-            progression.DropEmbers(position, Mathf.RoundToInt(amount * scale));
+            progression.DropEmbers(position, Mathf.RoundToInt(amount * playerHeat.EmberScale));
         }
 
         private void OnPlayerDied()
