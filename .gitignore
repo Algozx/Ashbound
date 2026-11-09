@@ -3,6 +3,8 @@
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
+# The WebGL build served by GitHub Pages.
+!/docs/Build/
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
