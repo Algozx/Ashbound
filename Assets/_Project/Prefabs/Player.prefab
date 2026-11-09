@@ -521,7 +521,8 @@ MonoBehaviour:
   - 0.75
   hottestTint: {r: 1, g: 0.65, b: 0.35, a: 1}
   audioSource: {fileID: 4660877478247271569}
-  levelUpSound: {fileID: 8300000, guid: d4fb4d894d37b3c4f8712a39bb8f8057, type: 3}
+  levelUpSound: {fileID: 8300000, guid: 8e9d8a6162ee8d840863b21cf8ce5ac4, type: 3}
+  levelUpVolume: 0.4
 --- !u!1 &6961613374802940793
 GameObject:
   m_ObjectHideFlags: 0

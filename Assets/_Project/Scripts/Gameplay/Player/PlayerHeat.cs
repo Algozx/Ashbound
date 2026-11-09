@@ -17,6 +17,7 @@ namespace Ashbound.Gameplay.Player
         [SerializeField] private Color hottestTint = new Color(1f, 0.65f, 0.35f);
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip levelUpSound;
+        [SerializeField, Range(0f, 1f)] private float levelUpVolume = 0.4f;
 
         private PlayerController controller;
         private Heat heat;
@@ -60,7 +61,7 @@ namespace Ashbound.Gameplay.Player
             controller.Tint = Color.Lerp(Color.white, hottestTint, (float)level / heat.MaxLevel);
             if (level > shownLevel)
             {
-                audioSource.PlayOneShot(levelUpSound);
+                audioSource.PlayOneShot(levelUpSound, levelUpVolume);
             }
 
             shownLevel = level;
