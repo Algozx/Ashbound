@@ -33,8 +33,6 @@ Enemies drop Embers. Dying keeps half of what you carry and beating the boss kee
 spending at an altar before a risky fight protects them. Embers buy permanent unlocks, saved in the
 browser. Landing hits without being hit builds Heat, which raises damage and Embers until you get hit.
 
-Project documents are in `design/`, and the reasons behind each choice are in `DECISIONS.md`.
-
 ## Running the project
 
 Open it with Unity 6000.6.0f1 or newer, open `Assets/_Project/Scenes/Bootstrap.unity` and press Play.
