@@ -3,6 +3,8 @@
 A 2D side-scrolling action roguelite for the browser, built in Unity. You fight through a castle in
 ashes, keep part of what you earn when you die, and come back stronger.
 
+Play it in the browser: https://algozx.github.io/Ashbound/ (desktop, keyboard and mouse).
+
 ## Controls
 
 | Action | Keyboard and mouse | Gamepad |
