@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Ashbound.Gameplay.Meta;
 using Ashbound.Gameplay.Player;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -17,7 +18,7 @@ namespace Ashbound.UI.Altar
         [SerializeField] private Transform rowParent;
         [SerializeField] private UnlockRowView rowPrefab;
         [SerializeField] private Button leaveButton;
-        [SerializeField] private Text embersLabel;
+        [SerializeField] private TMP_Text embersLabel;
         [SerializeField] private InputActionReference cancelAction;
         [SerializeField] private InputActionReference interactAction;
 

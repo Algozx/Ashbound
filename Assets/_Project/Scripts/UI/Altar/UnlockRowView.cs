@@ -1,5 +1,6 @@
 using System;
 using Ashbound.Gameplay.Meta;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +10,9 @@ namespace Ashbound.UI.Altar
     public sealed class UnlockRowView : MonoBehaviour
     {
         [SerializeField] private Button button;
-        [SerializeField] private Text nameLabel;
-        [SerializeField] private Text descriptionLabel;
-        [SerializeField] private Text costLabel;
+        [SerializeField] private TMP_Text nameLabel;
+        [SerializeField] private TMP_Text descriptionLabel;
+        [SerializeField] private TMP_Text costLabel;
 
         public Button Button => button;
 

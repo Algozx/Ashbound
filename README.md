@@ -3,7 +3,8 @@
 A 2D side-scrolling action roguelite for the browser, built in Unity. You fight through a castle in
 ashes, keep part of what you earn when you die, and come back stronger.
 
-Play it in the browser: https://algozx.github.io/Ashbound/ (desktop, keyboard and mouse).
+Play it in the browser: https://algozx.github.io/Ashbound/ (desktop, keyboard and mouse). The game fills
+the browser window and the interface adapts to its size.
 
 ## Controls
 
@@ -51,6 +52,7 @@ submodule at `Assets/_Project/Art`. A clone of this repository compiles but show
 |---|---|---|
 | [Rogue Fantasy Castle](https://assetstore.unity.com/packages/2d/environments/rogue-fantasy-castle-164725) | Szadi art | Unity Asset Store |
 | Warrior, Bringer of Death | Clembod | Free for commercial use, no redistribution |
+| GUI Fantasy Kit | kudriavtseva003 | Unity Asset Store |
 | [Pixel Art Icon Pack - RPG](https://assetstore.unity.com/packages/slug/158343) | Cainos | Unity Asset Store |
 | [Monsters Creatures Fantasy](https://luizmelo.itch.io/monsters-creatures-fantasy) | Luiz Melo | CC0 |
 | [Tiny RPG Font Kit I](https://opengameart.org/content/tiny-rpg-font-kit-i) | tiopalada | CC0 |

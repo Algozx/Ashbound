@@ -1,5 +1,6 @@
 using Ashbound.Gameplay.Enemies;
 using Ashbound.Gameplay.Levels;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ namespace Ashbound.UI.Hud
         [SerializeField] private RunDirector run;
         [SerializeField] private GameObject panel;
         [SerializeField] private Image healthFill;
-        [SerializeField] private Text nameLabel;
+        [SerializeField] private TMP_Text nameLabel;
 
         private BossArena arena;
         private BossController boss;

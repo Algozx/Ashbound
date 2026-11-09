@@ -1,7 +1,7 @@
 {
     "name": "Ashbound.UI",
     "rootNamespace": "Ashbound.UI",
-    "references": ["Ashbound.Gameplay", "Ashbound.Logic", "UnityEngine.UI", "Unity.InputSystem"],
+    "references": ["Ashbound.Gameplay", "Ashbound.Logic", "UnityEngine.UI", "Unity.TextMeshPro", "Unity.InputSystem"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
